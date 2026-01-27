@@ -525,14 +525,32 @@
             const chartBars = document.querySelectorAll('.chart-bar');
             const maxRain = Math.max(...rainData, 1); // מינימום 1 כדי למנוע חלוקה באפס
             
-            const dayNames = ['ב׳', 'ג׳', 'ד׳', 'ה׳', 'ו׳', 'אתמול', 'היום'];
+            // חישוב שמות ימים דינמית
+            const dayNames = ['א׳', 'ב׳', 'ג׳', 'ד׳', 'ה׳', 'ו׳', 'ש׳'];
+            const today = new Date();
+            const chartLabels = [];
+            
+            // בניית רשימת שמות ימים - מ-6 ימים אחורה עד היום
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date(today);
+                date.setDate(today.getDate() - i);
+                const dayOfWeek = date.getDay(); // 0 = ראשון, 6 = שבת
+                
+                if (i === 0) {
+                    chartLabels.push('היום');
+                } else if (i === 1) {
+                    chartLabels.push('אתמול');
+                } else {
+                    chartLabels.push(dayNames[dayOfWeek]);
+                }
+            }
             
             rainData.forEach((rain, index) => {
                 if (chartBars[index]) {
                     const percentage = (rain / maxRain) * 100;
                     chartBars[index].style.height = percentage + '%';
                     chartBars[index].querySelector('.chart-bar-value').textContent = rain;
-                    chartBars[index].querySelector('.chart-bar-label').textContent = dayNames[index];
+                    chartBars[index].querySelector('.chart-bar-label').textContent = chartLabels[index];
                 }
             });
         }
