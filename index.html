@@ -437,11 +437,19 @@
         // טעינת נתוני מזג אויר
         async function loadWeatherData() {
             try {
-                const response = await fetch('weather-data.json');
+                // Cache busting - מאלץ טעינה מחדש
+                const response = await fetch('./weather-data.json?t=' + Date.now());
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
                 const data = await response.json();
                 
+                console.log('Data loaded:', data); // לבדיקה
+                
                 // עדכון כותרת
-                document.querySelector('h1').textContent = 'מזג אויר - ' + data.station_name;
+                document.querySelector('h1').textContent = '🌡️ מזג אויר - ' + data.station_name;
                 
                 // עדכון זמן עדכון
                 const updateTime = new Date(data.last_update);
@@ -483,7 +491,8 @@
                 
             } catch (error) {
                 console.error('שגיאה בטעינת נתונים:', error);
-                document.querySelector('.last-update').textContent = 'שגיאה בטעינת נתונים';
+                console.error('Error details:', error.message);
+                document.querySelector('.last-update').textContent = 'שגיאה בטעינת נתונים - ' + error.message;
             }
         }
         
