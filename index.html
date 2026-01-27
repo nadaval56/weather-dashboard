@@ -315,13 +315,13 @@
         <!-- Header -->
         <div class="header">
             <h1>🌡️ מזג אויר - כוכב השחר</h1>
-            <div class="last-update">עודכן לאחרונה: 18:30</div>
+            <div class="last-update">טוען...</div>
         </div>
 
         <!-- Current Weather -->
         <div class="current-weather">
             <div class="weather-icon">☀️</div>
-            <div class="current-temp">24°C</div>
+            <div class="current-temp">...</div>
             <div class="temp-label">עכשיו</div>
         </div>
 
@@ -330,14 +330,14 @@
             <div class="stat-card">
                 <div class="stat-icon" style="color: #f44336; font-size: 3em;">▲</div>
                 <div class="stat-label">מקסימום ביממה האחרונה</div>
-                <div class="stat-value">27°C</div>
-                <div class="stat-time">14:30</div>
+                <div class="stat-value">...</div>
+                <div class="stat-time">--:--</div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon" style="color: #2196F3; font-size: 3em;">▼</div>
                 <div class="stat-label">מינימום ביממה האחרונה</div>
-                <div class="stat-value">19°C</div>
-                <div class="stat-time">05:20</div>
+                <div class="stat-value">...</div>
+                <div class="stat-time">--:--</div>
             </div>
         </div>
 
@@ -347,13 +347,13 @@
             <div class="wind-section">
                 <div class="wind-current">
                     <div class="wind-info" style="text-align: center;">
-                        <div class="wind-speed">15 קמ"ש</div>
-                        <div class="wind-direction">צפון-מזרח</div>
+                        <div class="wind-speed">...</div>
+                        <div class="wind-direction">...</div>
                     </div>
                 </div>
                 <div style="text-align: center; color: #666; margin-top: 15px;">
                     <div style="margin-bottom: 5px;">רוח מקסימלית ב-24 שעות האחרונות:</div>
-                    <div style="font-size: 1.3em;"><strong>28 קמ"ש</strong> (12:15)</div>
+                    <div style="font-size: 1.3em;"><strong>...</strong> (--:--)</div>
                 </div>
             </div>
         </div>
@@ -365,18 +365,18 @@
             <!-- Seasonal Rain - Most Important -->
             <div style="text-align: center; margin-bottom: 30px; padding: 30px 20px; background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%); border-radius: 20px; box-shadow: 0 8px 25px rgba(33, 150, 243, 0.15); border: 2px solid #2196F3;">
                 <div style="font-size: 0.9em; color: #1976D2; margin-bottom: 10px; font-weight: bold;">מתחילת העונה</div>
-                <div class="rain-value" style="font-size: 3em; color: #1565C0; display: inline;">285</div>
+                <div class="rain-value" style="font-size: 3em; color: #1565C0; display: inline;">...</div>
                 <div style="display: inline; font-size: 1.5em; color: #1976D2; margin-right: 10px;">מ"מ</div>
             </div>
             
             <!-- Today and Weekly -->
             <div class="rain-stats">
                 <div class="rain-stat">
-                    <div class="rain-value">0</div>
+                    <div class="rain-value">...</div>
                     <div class="rain-label">מ"מ היום</div>
                 </div>
                 <div class="rain-stat">
-                    <div class="rain-value">12</div>
+                    <div class="rain-value">...</div>
                     <div class="rain-label">מ"מ השבוע</div>
                 </div>
             </div>
@@ -387,28 +387,28 @@
             </div>
             <div class="chart-container">
                 <div class="chart-bars">
-                    <div class="chart-bar" style="height: 20%;">
-                        <div class="chart-bar-value">2</div>
+                    <div class="chart-bar" style="height: 0%;">
+                        <div class="chart-bar-value">0</div>
                         <div class="chart-bar-label">ב׳</div>
                     </div>
-                    <div class="chart-bar" style="height: 45%;">
-                        <div class="chart-bar-value">5</div>
+                    <div class="chart-bar" style="height: 0%;">
+                        <div class="chart-bar-value">0</div>
                         <div class="chart-bar-label">ג׳</div>
                     </div>
-                    <div class="chart-bar" style="height: 80%;">
-                        <div class="chart-bar-value">8</div>
+                    <div class="chart-bar" style="height: 0%;">
+                        <div class="chart-bar-value">0</div>
                         <div class="chart-bar-label">ד׳</div>
                     </div>
-                    <div class="chart-bar" style="height: 30%;">
-                        <div class="chart-bar-value">3</div>
+                    <div class="chart-bar" style="height: 0%;">
+                        <div class="chart-bar-value">0</div>
                         <div class="chart-bar-label">ה׳</div>
                     </div>
-                    <div class="chart-bar" style="height: 15%;">
-                        <div class="chart-bar-value">1.5</div>
+                    <div class="chart-bar" style="height: 0%;">
+                        <div class="chart-bar-value">0</div>
                         <div class="chart-bar-label">ו׳</div>
                     </div>
-                    <div class="chart-bar" style="height: 5%;">
-                        <div class="chart-bar-value">0.5</div>
+                    <div class="chart-bar" style="height: 0%;">
+                        <div class="chart-bar-value">0</div>
                         <div class="chart-bar-label">אתמול</div>
                     </div>
                     <div class="chart-bar" style="height: 0%;">
@@ -537,8 +537,12 @@
             });
         }
         
-        // טעינה ראשונית
-        loadWeatherData();
+        // טעינה ראשונית - רק אחרי שהדף נטען לגמרי
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadWeatherData);
+        } else {
+            loadWeatherData();
+        }
         
         // רענון כל 30 דקות
         setInterval(loadWeatherData, 30 * 60 * 1000);
