@@ -361,6 +361,15 @@
         <!-- Rain Section -->
         <div class="section">
             <h2 class="section-title">🌧️ משקעים</h2>
+            
+            <!-- Seasonal Rain - Most Important -->
+            <div style="text-align: center; margin-bottom: 30px; padding: 30px 20px; background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%); border-radius: 20px; box-shadow: 0 8px 25px rgba(33, 150, 243, 0.15); border: 2px solid #2196F3;">
+                <div style="font-size: 0.9em; color: #1976D2; margin-bottom: 10px; font-weight: bold;">מתחילת העונה</div>
+                <div class="rain-value" style="font-size: 3em; color: #1565C0; display: inline;">285</div>
+                <div style="display: inline; font-size: 1.5em; color: #1976D2; margin-right: 10px;">מ"מ</div>
+            </div>
+            
+            <!-- Today and Weekly -->
             <div class="rain-stats">
                 <div class="rain-stat">
                     <div class="rain-value">0</div>
@@ -371,15 +380,10 @@
                     <div class="rain-label">מ"מ השבוע</div>
                 </div>
             </div>
-            
-            <div style="text-align: center; margin-top: 20px; padding: 25px 20px; background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%); border-radius: 20px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); border: 1px solid rgba(102, 126, 234, 0.1);">
-                <div class="rain-value" style="display: inline;">285</div>
-                <div class="rain-label" style="display: inline; margin-right: 5px;">מ"מ מתחילת העונה</div>
-            </div>
 
             <!-- 7 Days Chart -->
             <div style="text-align: center; color: #666; margin-top: 30px; margin-bottom: 10px; font-weight: bold;">
-                כמות משקעים שבועית (מ"מ)
+                משקעים יומיים - שבוע אחרון (מ"מ)
             </div>
             <div class="chart-container">
                 <div class="chart-bars">
@@ -419,11 +423,11 @@
         <div class="footer">
             <p style="font-size: 1.1em; margin-bottom: 20px;">מופעל באמצעות: <strong>נדב אלשיך</strong></p>
             <div class="logos">
-                <a href="https://מעטצרי.com" class="logo-link" target="_blank">
-                    🎯 מעט צרי
+                <a href="https://banknote.co.il/" class="logo-link" target="_blank">
+                    Banknote - שטרות, מטבעות ובולים
                 </a>
-                <a href="https://banknote.co.il" class="logo-link" target="_blank">
-                    💰 Banknote
+                <a href="https://holisticcenter.co.il/" class="logo-link" target="_blank">
+                    מעט צרי - רפואה משלימה
                 </a>
             </div>
         </div>
@@ -470,9 +474,9 @@
                 }
                 
                 // משקעים
-                document.querySelectorAll('.rain-value')[0].textContent = data.rain.today;
-                document.querySelectorAll('.rain-value')[1].textContent = data.rain.week;
-                document.querySelectorAll('.rain-value')[2].textContent = data.rain.season;
+                document.querySelectorAll('.rain-value')[0].textContent = data.rain.season;
+                document.querySelectorAll('.rain-value')[1].textContent = data.rain.today;
+                document.querySelectorAll('.rain-value')[2].textContent = data.rain.week;
                 
                 // גרף משקעים
                 updateRainChart(data.rain.daily_7d);
