@@ -449,27 +449,50 @@
                 console.log('Data loaded:', data); // לבדיקה
                 
                 // עדכון כותרת
-                document.querySelector('h1').textContent = '🌡️ מזג אויר - ' + data.station_name;
+                const h1 = document.querySelector('h1');
+                console.log('H1 element:', h1);
+                if (h1) h1.textContent = '🌡️ מזג אויר - ' + data.station_name;
                 
                 // עדכון זמן עדכון
                 const updateTime = new Date(data.last_update);
-                document.querySelector('.last-update').textContent = 
-                    'עודכן לאחרונה: ' + updateTime.toLocaleString('he-IL');
+                const lastUpdateElem = document.querySelector('.last-update');
+                console.log('Last update element:', lastUpdateElem);
+                if (lastUpdateElem) {
+                    lastUpdateElem.textContent = 'עודכן לאחרונה: ' + updateTime.toLocaleString('he-IL');
+                }
                 
                 // טמפרטורה נוכחית
-                document.querySelector('.current-temp').textContent = data.temperature.current + '°C';
+                const currentTempElem = document.querySelector('.current-temp');
+                console.log('Current temp element:', currentTempElem);
+                if (currentTempElem) {
+                    currentTempElem.textContent = data.temperature.current + '°C';
+                }
                 
                 // טמפרטורה מקסימלית
-                document.querySelectorAll('.stat-value')[0].textContent = data.temperature.max + '°C';
-                document.querySelectorAll('.stat-time')[0].textContent = data.temperature.max_time;
+                const statValues = document.querySelectorAll('.stat-value');
+                console.log('Stat values:', statValues.length);
+                if (statValues[0]) statValues[0].textContent = data.temperature.max + '°C';
+                
+                const statTimes = document.querySelectorAll('.stat-time');
+                console.log('Stat times:', statTimes.length);
+                if (statTimes[0]) statTimes[0].textContent = data.temperature.max_time;
                 
                 // טמפרטורה מינימלית
-                document.querySelectorAll('.stat-value')[1].textContent = data.temperature.min + '°C';
-                document.querySelectorAll('.stat-time')[1].textContent = data.temperature.min_time;
+                if (statValues[1]) statValues[1].textContent = data.temperature.min + '°C';
+                if (statTimes[1]) statTimes[1].textContent = data.temperature.min_time;
                 
                 // רוח נוכחית
-                document.querySelector('.wind-speed').textContent = data.wind.speed + ' קמ"ש';
-                document.querySelector('.wind-direction').textContent = data.wind.direction;
+                const windSpeedElem = document.querySelector('.wind-speed');
+                console.log('Wind speed element:', windSpeedElem);
+                if (windSpeedElem) {
+                    windSpeedElem.textContent = data.wind.speed + ' קמ"ש';
+                }
+                
+                const windDirElem = document.querySelector('.wind-direction');
+                console.log('Wind direction element:', windDirElem);
+                if (windDirElem) {
+                    windDirElem.textContent = data.wind.direction;
+                }
                 
                 // רוח מקסימלית
                 const windMaxElement = document.querySelector('.wind-section').querySelectorAll('strong')[0];
@@ -482,9 +505,11 @@
                 }
                 
                 // משקעים
-                document.querySelectorAll('.rain-value')[0].textContent = data.rain.season;
-                document.querySelectorAll('.rain-value')[1].textContent = data.rain.today;
-                document.querySelectorAll('.rain-value')[2].textContent = data.rain.week;
+                const rainValues = document.querySelectorAll('.rain-value');
+                console.log('Rain values:', rainValues.length);
+                if (rainValues[0]) rainValues[0].textContent = data.rain.season;
+                if (rainValues[1]) rainValues[1].textContent = data.rain.today;
+                if (rainValues[2]) rainValues[2].textContent = data.rain.week;
                 
                 // גרף משקעים
                 updateRainChart(data.rain.daily_7d);
