@@ -445,26 +445,29 @@
                     'עודכן לאחרונה: ' + updateTime.toLocaleString('he-IL');
                 
                 // טמפרטורה נוכחית
-                document.querySelector('.temperature').textContent = data.temperature.current + '°';
+                document.querySelector('.current-temp').textContent = data.temperature.current + '°C';
                 
                 // טמפרטורה מקסימלית
-                document.querySelectorAll('.stat-value')[0].innerHTML = 
-                    `<span style="color: #E53E3E;">▲</span> ${data.temperature.max}°C`;
+                document.querySelectorAll('.stat-value')[0].textContent = data.temperature.max + '°C';
                 document.querySelectorAll('.stat-time')[0].textContent = data.temperature.max_time;
                 
                 // טמפרטורה מינימלית
-                document.querySelectorAll('.stat-value')[1].innerHTML = 
-                    `<span style="color: #3182CE;">▼</span> ${data.temperature.min}°C`;
+                document.querySelectorAll('.stat-value')[1].textContent = data.temperature.min + '°C';
                 document.querySelectorAll('.stat-time')[1].textContent = data.temperature.min_time;
                 
                 // רוח נוכחית
-                document.querySelectorAll('.stat-value')[2].textContent = 
-                    `${data.wind.speed} קמ"ש ${data.wind.direction}`;
+                document.querySelector('.wind-speed').textContent = data.wind.speed + ' קמ"ש';
+                document.querySelector('.wind-direction').textContent = data.wind.direction;
                 
                 // רוח מקסימלית
-                document.querySelectorAll('.stat-value')[3].innerHTML = 
-                    `<span style="color: #E53E3E;">▲</span> ${data.wind.max} קמ"ש`;
-                document.querySelectorAll('.stat-time')[2].textContent = data.wind.max_time;
+                const windMaxElement = document.querySelector('.wind-section').querySelectorAll('strong')[0];
+                if (windMaxElement) {
+                    windMaxElement.textContent = data.wind.max + ' קמ"ש';
+                }
+                const windMaxTimeElement = document.querySelector('.wind-section').querySelector('div[style*="font-size: 1.3em"]');
+                if (windMaxTimeElement) {
+                    windMaxTimeElement.innerHTML = `<strong>${data.wind.max} קמ"ש</strong> (${data.wind.max_time})`;
+                }
                 
                 // משקעים
                 document.querySelectorAll('.rain-value')[0].textContent = data.rain.today;
