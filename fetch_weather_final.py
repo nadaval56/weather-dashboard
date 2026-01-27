@@ -13,9 +13,9 @@ import os
 
 # ===== הגדרות =====
 # קריאה ממשתני סביבה (GitHub Secrets) או ערכים ברירת מחדל
-STATION_ID = os.environ.get('STATION_ID')
-PUBLIC_KEY = os.environ.get('PUBLIC_KEY')
-PRIVATE_KEY = os.environ.get('PRIVATE_KEY')
+STATION_ID = os.environ.get('STATION_ID', '03114DE5')
+PUBLIC_KEY = os.environ.get('PUBLIC_KEY', 'd4a82d821e8b722be3b0c7f82aca07f5b59e4b12217e9128')
+PRIVATE_KEY = os.environ.get('PRIVATE_KEY', '818b8fe5461d0195a754a4202c3b12a9be9d83a88e770d07')
 API_BASE = "https://api.fieldclimate.com/v2"
 
 def make_request(path):
@@ -140,8 +140,8 @@ def extract_weather_data():
     rain_today = meta.get('rainCurrentDay', {}).get('sum', 0)
     rain_7d = meta.get('rain7d', {}).get('sum', 0)
     
-    # חישוב משקעים עונתיים (מ-1 באוקטובר)
-    rain_season = calculate_season_rain(meta)
+    # עדכון וחישוב משקעים עונתיים (שיטת צבירה)
+    rain_season = update_seasonal_rain(rain_today)
     
     # חישוב גשם ל-7 ימים אחרונים (לגרף)
     rain_7d_daily = get_7day_rain(meta)
@@ -200,9 +200,83 @@ def calculate_season_rain(meta):
     """
     חישוב משקעים מתחילת העונה (1 באוקטובר)
     """
-    # נשתמש בנתונים מ-rain7d ונוסיף היסטוריה אם יש
-    # כרגע - פשוט נחזיר את מה שיש
+    # בינתיים - פשוט נחזיר את השבועי
+    # TODO: נוסיף שליפה של נתונים יומיים
     return meta.get('rain7d', {}).get('sum', 0)
+
+def load_season_data():
+    """
+    טעינת נתוני עונה שמורים
+    """
+    try:
+        with open('rain_season.json', 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        # אתחול ראשוני - ערך ידני מהאתר של FieldClimate
+        print("📝 יצירת קובץ עונתי ראשוני...")
+        return {
+            "season_start": "2025-10-01",
+            "season_rain": 223.2,  # ערך ידני מהאתר נכון ל-27/01/2026
+            "last_update": "2026-01-27",
+            "last_daily_rain": 0
+        }
+
+def save_season_data(season_data):
+    """
+    שמירת נתוני עונה
+    """
+    with open('rain_season.json', 'w', encoding='utf-8') as f:
+        json.dump(season_data, f, ensure_ascii=False, indent=2)
+
+def update_seasonal_rain(rain_today):
+    """
+    עדכון משקעים עונתיים - שיטת צבירה
+    """
+    # טעינת נתונים קיימים
+    season_data = load_season_data()
+    
+    # בדיקה אם צריך לאפס (1 באוקטובר)
+    now = datetime.utcnow()
+    season_start_str = f"{now.year if now.month >= 10 else now.year - 1}-10-01"
+    
+    if season_data.get('season_start') != season_start_str:
+        # עונה חדשה!
+        print(f"🌱 עונה חדשה מתחילה: {season_start_str}")
+        season_data = {
+            "season_start": season_start_str,
+            "season_rain": 0,
+            "last_update": now.strftime('%Y-%m-%d'),
+            "last_daily_rain": 0
+        }
+    
+    # בדיקה אם כבר עדכנו היום
+    today_str = now.strftime('%Y-%m-%d')
+    if season_data.get('last_update') == today_str:
+        # כבר עדכנו היום - לא להוסיף שוב
+        return season_data['season_rain']
+    
+    # עדכון הסכום
+    old_rain = season_data.get('season_rain', 0)
+    new_rain = old_rain + rain_today
+    
+    season_data['season_rain'] = new_rain
+    season_data['last_update'] = today_str
+    season_data['last_daily_rain'] = rain_today
+    
+    # שמירה
+    save_season_data(season_data)
+    
+    print(f"☔ עדכון עונתי: {old_rain} + {rain_today} = {new_rain} מ\"מ")
+    
+    return new_rain
+
+def fetch_seasonal_rain():
+    """
+    שליפת נתונים יומיים לחישוב משקעים עונתיים
+    """
+    # פשוט נחזיר את הערך השמור
+    season_data = load_season_data()
+    return season_data.get('season_rain', 0)
 
 def get_7day_rain(meta):
     """
