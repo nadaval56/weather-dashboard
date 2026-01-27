@@ -13,9 +13,9 @@ import os
 
 # ===== הגדרות =====
 # קריאה ממשתני סביבה (GitHub Secrets) או ערכים ברירת מחדל
-STATION_ID = os.environ.get('STATION_ID', '03114DE5')
-PUBLIC_KEY = os.environ.get('PUBLIC_KEY', 'd4a82d821e8b722be3b0c7f82aca07f5b59e4b12217e9128')
-PRIVATE_KEY = os.environ.get('PRIVATE_KEY', '818b8fe5461d0195a754a4202c3b12a9be9d83a88e770d07')
+STATION_ID = os.environ.get('STATION_ID')
+PUBLIC_KEY = os.environ.get('PUBLIC_KEY')
+PRIVATE_KEY = os.environ.get('PRIVATE_KEY')
 API_BASE = "https://api.fieldclimate.com/v2"
 
 def make_request(path):
