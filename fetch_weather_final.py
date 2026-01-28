@@ -84,10 +84,9 @@ def extract_weather_data():
     dates = []
     for date_str in dates_raw:
         try:
-            # פורמט: "2026-01-28 10:00:00" (עם רווח!)
+            # פורמט: "2026-01-28 10:00:00" (בזמן מקומי UTC+2!)
             date_obj = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
-            # ה-dates מה-API הם בזמן מקומי (UTC+2), צריך להמיר ל-UTC
-            date_obj = date_obj - timedelta(hours=2)
+            # ה-dates כבר בזמן מקומי - לא צריך להמיר!
             dates.append(date_obj)
         except Exception as e:
             dates.append(None)
@@ -123,7 +122,9 @@ def extract_weather_data():
         
         # סינון רק ערכים מ-24 שעות אחרונות
         now = datetime.utcnow()
-        cutoff_time = now - timedelta(hours=24)
+        # המרה לזמן מקומי (UTC+2) כדי להתאים ל-dates
+        now_local = now + timedelta(hours=2)
+        cutoff_time = now_local - timedelta(hours=24)
         
         if 'max' in values and values['max'] and dates:
             temp_max_list = []
@@ -167,9 +168,11 @@ def extract_weather_data():
         if 'max' in values and values['max'] and dates:
             # סינון רק ערכים מ-24 שעות אחרונות לפי timestamp
             now = datetime.utcnow()
-            cutoff_time = now - timedelta(hours=24)
+            # המרה לזמן מקומי (UTC+2) כדי להתאים ל-dates
+            now_local = now + timedelta(hours=2)
+            cutoff_time = now_local - timedelta(hours=24)
             
-            print(f"🌬️  רוח - עכשיו: {now}, סף: {cutoff_time}")
+            print(f"🌬️  רוח - עכשיו (מקומי): {now_local}, סף: {cutoff_time}")
             print(f"🌬️  דוגמת dates: {dates[0] if dates else None} עד {dates[-1] if dates else None}")
             
             wind_max_list = []
