@@ -233,17 +233,23 @@ def degrees_to_direction(deg):
     idx = int((deg + 22.5) / 45) % 8
     return directions[idx]
 
-def format_time(time_str):
+def format_time(time_input):
     """
     עיצוב זמן לפורמט נוח
     """
     try:
-        dt = datetime.fromisoformat(time_str.replace('Z', '+00:00'))
+        # אם זה כבר datetime object
+        if isinstance(time_input, datetime):
+            dt = time_input
+        else:
+            # אם זה string
+            dt = datetime.fromisoformat(time_input.replace('Z', '+00:00'))
+        
         # המרה לזמן ישראל (+2 שעות)
         dt = dt + timedelta(hours=2)
         return dt.strftime('%H:%M')
     except:
-        return time_str
+        return str(time_input) if time_input else None
 
 def calculate_season_rain(meta):
     """
@@ -377,3 +383,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+        
