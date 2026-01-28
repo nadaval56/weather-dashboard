@@ -82,6 +82,8 @@ def extract_weather_data():
         try:
             # פורמט: "2026-01-28 10:00:00" (עם רווח!)
             date_obj = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
+            # ה-dates מה-API הם בזמן מקומי (UTC+2), צריך להמיר ל-UTC
+            date_obj = date_obj - timedelta(hours=2)
             dates.append(date_obj)
         except Exception as e:
             dates.append(None)
