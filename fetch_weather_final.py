@@ -86,6 +86,11 @@ def extract_weather_data():
         except:
             dates.append(None)
     
+    # Debug - בדיקת dates
+    if dates:
+        print(f"🕐 טווח זמנים: {dates[0]} עד {dates[-1]}")
+        print(f"🕐 סה\"כ {len(dates)} timestamps")
+    
     # מציאת החיישנים
     temp_sensor = None
     wind_speed_sensor = None
@@ -119,6 +124,9 @@ def extract_weather_data():
         now = datetime.utcnow()
         cutoff_time = now - timedelta(hours=24)
         
+        print(f"🕐 עכשיו (UTC): {now}")
+        print(f"🕐 סף 24 שעות: {cutoff_time}")
+        
         if 'max' in values and values['max'] and dates:
             temp_max_list = []
             temp_max_dates = []
@@ -127,6 +135,8 @@ def extract_weather_data():
                 if date_val and date_val >= cutoff_time:
                     temp_max_list.append(temp_val)
                     temp_max_dates.append(date_val)
+            
+            print(f"🌡️  מקסימום: {len(temp_max_list)} ערכים אחרי סינון (מתוך {len(values['max'])})")
             
             if temp_max_list:
                 temp_max = max(temp_max_list)
