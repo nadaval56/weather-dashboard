@@ -12,13 +12,14 @@ import json
 import os
 
 # ===== הגדרות =====
-# קריאה ממשתני סביבה (GitHub Secrets) - אל תשים מפתחות כאן!
+# קריאה ממשתני סביבה (GitHub Secrets)
 STATION_ID = os.environ.get('STATION_ID', '03114DE5')
 PUBLIC_KEY = os.environ.get('PUBLIC_KEY')
 PRIVATE_KEY = os.environ.get('PRIVATE_KEY')
 
+# בדיקה שהמפתחות קיימים (רק אזהרה, לא עוצרים)
 if not PUBLIC_KEY or not PRIVATE_KEY:
-    raise ValueError("❌ חסרים מפתחות API! הוסף אותם ב-GitHub Secrets")
+    print("⚠️  אזהרה: לא נמצאו מפתחות API ב-environment variables")
 
 API_BASE = "https://api.fieldclimate.com/v2"
 
