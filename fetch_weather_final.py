@@ -18,6 +18,9 @@ PUBLIC_KEY = os.environ.get('PUBLIC_KEY', 'd4a82d821e8b722be3b0c7f82aca07f5b59e4
 PRIVATE_KEY = os.environ.get('PRIVATE_KEY', '818b8fe5461d0195a754a4202c3b12a9be9d83a88e770d07')
 API_BASE = "https://api.fieldclimate.com/v2"
 
+# גשם שנרשם לפני הקמת התחנה (ניתן לעדכן כשיהיו נתונים מדויקים יותר)
+PRE_STATION_RAIN = 15.0  # מ"מ - מדידות מתחנות אחרות לפני הקמת התחנה
+
 def make_request(path):
     """
     שליחת בקשה ל-API עם אימות HMAC
@@ -202,7 +205,7 @@ def extract_weather_data():
         'rain': {
             'today': round(rain_today, 1),
             'week': round(rain_7d, 1),
-            'season': round(rain_season, 1),
+            'season': round(rain_season + PRE_STATION_RAIN, 1),  # כולל גשם טרום-תחנה
             'daily_7d': rain_7d_daily
         }
     }
@@ -360,8 +363,7 @@ def main():
     print(f"   💨🔝 רוח מקסימלית (24 שעות): {weather_data['wind']['max']} קמ\"ש ({weather_data['wind']['max_time']})")
     print(f"   🌧️  גשם היום: {weather_data['rain']['today']} מ\"מ")
     print(f"   📅 גשם שבועי: {weather_data['rain']['week']} מ\"מ")
-    print(f"   ☔ גשם עונתי: {weather_data['rain']['season']} מ\"מ")
+    print(f"   ☔ גשם עונתי: {weather_data['rain']['season']} מ\"מ (כולל {PRE_STATION_RAIN} מ\"מ טרום-תחנה)")
 
 if __name__ == "__main__":
     main()
-
