@@ -163,13 +163,22 @@ def extract_weather_data():
             now = datetime.utcnow()
             cutoff_time = now - timedelta(hours=24)
             
+            print(f"🌬️  רוח - עכשיו: {now}, סף: {cutoff_time}")
+            print(f"🌬️  דוגמת dates: {dates[0] if dates else None} עד {dates[-1] if dates else None}")
+            
             wind_max_list = []
             wind_max_dates = []
             
             for i, (wind_val, date_val) in enumerate(zip(values['max'], dates)):
                 if date_val and date_val >= cutoff_time:
-                    wind_max_list.append(wind_val * 3.6)  # המרה ל-km/h
+                    wind_kmh = wind_val * 3.6
+                    wind_max_list.append(wind_kmh)
                     wind_max_dates.append(date_val)
+                    # Debug - הדפס את 3 הערכים הגבוהים ביותר
+                    if wind_kmh > 20:
+                        print(f"🌬️  רוח גבוהה: {wind_kmh:.1f} קמ\"ש בזמן {date_val}")
+            
+            print(f"🌬️  סה\"כ {len(wind_max_list)} ערכי רוח אחרי סינון (מתוך {len(values['max'])})")
             
             if wind_max_list:
                 wind_max = round(max(wind_max_list), 1)
@@ -383,4 +392,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-        
