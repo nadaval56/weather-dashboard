@@ -74,7 +74,17 @@ def extract_weather_data():
     
     # חילוץ נתוני חיישנים
     data = raw_24h.get('data', [])
-    dates = raw_24h.get('dates', [])
+    dates_raw = raw_24h.get('dates', [])
+    
+    # המרת dates ל-datetime objects
+    dates = []
+    for date_str in dates_raw:
+        try:
+            # פורמט: "2026-01-28T10:00:00"
+            date_obj = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S")
+            dates.append(date_obj)
+        except:
+            dates.append(None)
     
     # מציאת החיישנים
     temp_sensor = None
