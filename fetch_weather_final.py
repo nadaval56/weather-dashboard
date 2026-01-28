@@ -76,31 +76,15 @@ def extract_weather_data():
     data = raw_24h.get('data', [])
     dates_raw = raw_24h.get('dates', [])
     
-    # Debug - ראה פורמט תאריך מקורי
-    if dates_raw:
-        print(f"🕐 דוגמה לתאריך מקורי: '{dates_raw[0]}'")
-        print(f"🕐 דוגמה אחרונה: '{dates_raw[-1]}'")
-    
     # המרת dates ל-datetime objects
     dates = []
     for date_str in dates_raw:
         try:
-            # ניסיון 1: פורמט עם timezone
-            if 'Z' in date_str or '+' in date_str:
-                # ISO format with timezone
-                date_obj = datetime.fromisoformat(date_str.replace('Z', '+00:00'))
-            else:
-                # פורמט: "2026-01-28T10:00:00"
-                date_obj = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S")
+            # פורמט: "2026-01-28 10:00:00" (עם רווח!)
+            date_obj = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
             dates.append(date_obj)
         except Exception as e:
-            print(f"⚠️  כשל בהמרת תאריך: '{date_str}' - {e}")
             dates.append(None)
-    
-    # Debug - בדיקת dates
-    if dates:
-        print(f"🕐 טווח זמנים: {dates[0]} עד {dates[-1]}")
-        print(f"🕐 סה\"כ {len(dates)} timestamps")
     
     # מציאת החיישנים
     temp_sensor = None
@@ -135,9 +119,6 @@ def extract_weather_data():
         now = datetime.utcnow()
         cutoff_time = now - timedelta(hours=24)
         
-        print(f"🕐 עכשיו (UTC): {now}")
-        print(f"🕐 סף 24 שעות: {cutoff_time}")
-        
         if 'max' in values and values['max'] and dates:
             temp_max_list = []
             temp_max_dates = []
@@ -146,8 +127,6 @@ def extract_weather_data():
                 if date_val and date_val >= cutoff_time:
                     temp_max_list.append(temp_val)
                     temp_max_dates.append(date_val)
-            
-            print(f"🌡️  מקסימום: {len(temp_max_list)} ערכים אחרי סינון (מתוך {len(values['max'])})")
             
             if temp_max_list:
                 temp_max = max(temp_max_list)
@@ -398,4 +377,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-            
