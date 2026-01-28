@@ -12,10 +12,14 @@ import json
 import os
 
 # ===== הגדרות =====
-# קריאה ממשתני סביבה (GitHub Secrets) או ערכים ברירת מחדל
+# קריאה ממשתני סביבה (GitHub Secrets) - אל תשים מפתחות כאן!
 STATION_ID = os.environ.get('STATION_ID', '03114DE5')
-PUBLIC_KEY = os.environ.get('PUBLIC_KEY', 'd4a82d821e8b722be3b0c7f82aca07f5b59e4b12217e9128')
-PRIVATE_KEY = os.environ.get('PRIVATE_KEY', '818b8fe5461d0195a754a4202c3b12a9be9d83a88e770d07')
+PUBLIC_KEY = os.environ.get('PUBLIC_KEY')
+PRIVATE_KEY = os.environ.get('PRIVATE_KEY')
+
+if not PUBLIC_KEY or not PRIVATE_KEY:
+    raise ValueError("❌ חסרים מפתחות API! הוסף אותם ב-GitHub Secrets")
+
 API_BASE = "https://api.fieldclimate.com/v2"
 
 # גשם שנרשם לפני הקמת התחנה (ניתן לעדכן כשיהיו נתונים מדויקים יותר)
