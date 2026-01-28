@@ -101,16 +101,38 @@ def extract_weather_data():
         values = temp_sensor['values']
         if 'avg' in values and values['avg']:
             current_temp = values['avg'][-1]  # ערך אחרון
-        if 'max' in values and values['max']:
-            temp_max_list = values['max']
-            temp_max = max(temp_max_list)
-            temp_max_idx = temp_max_list.index(temp_max)
-            temp_max_time = dates[temp_max_idx] if temp_max_idx < len(dates) else None
-        if 'min' in values and values['min']:
-            temp_min_list = values['min']
-            temp_min = min(temp_min_list)
-            temp_min_idx = temp_min_list.index(temp_min)
-            temp_min_time = dates[temp_min_idx] if temp_min_idx < len(dates) else None
+        
+        # סינון רק ערכים מ-24 שעות אחרונות
+        now = datetime.utcnow()
+        cutoff_time = now - timedelta(hours=24)
+        
+        if 'max' in values and values['max'] and dates:
+            temp_max_list = []
+            temp_max_dates = []
+            
+            for temp_val, date_val in zip(values['max'], dates):
+                if date_val and date_val >= cutoff_time:
+                    temp_max_list.append(temp_val)
+                    temp_max_dates.append(date_val)
+            
+            if temp_max_list:
+                temp_max = max(temp_max_list)
+                temp_max_idx = temp_max_list.index(temp_max)
+                temp_max_time = temp_max_dates[temp_max_idx]
+        
+        if 'min' in values and values['min'] and dates:
+            temp_min_list = []
+            temp_min_dates = []
+            
+            for temp_val, date_val in zip(values['min'], dates):
+                if date_val and date_val >= cutoff_time:
+                    temp_min_list.append(temp_val)
+                    temp_min_dates.append(date_val)
+            
+            if temp_min_list:
+                temp_min = min(temp_min_list)
+                temp_min_idx = temp_min_list.index(temp_min)
+                temp_min_time = temp_min_dates[temp_min_idx]
     
     # רוח
     current_wind_speed = None
@@ -123,11 +145,23 @@ def extract_weather_data():
         if 'avg' in values and values['avg']:
             # המרה מ-m/s ל-km/h
             current_wind_speed = round(values['avg'][-1] * 3.6, 1)
-        if 'max' in values and values['max']:
-            wind_max_list = [v * 3.6 for v in values['max']]
-            wind_max = round(max(wind_max_list), 1)
-            wind_max_idx = wind_max_list.index(max(wind_max_list))
-            wind_max_time = dates[wind_max_idx] if wind_max_idx < len(dates) else None
+        if 'max' in values and values['max'] and dates:
+            # סינון רק ערכים מ-24 שעות אחרונות לפי timestamp
+            now = datetime.utcnow()
+            cutoff_time = now - timedelta(hours=24)
+            
+            wind_max_list = []
+            wind_max_dates = []
+            
+            for i, (wind_val, date_val) in enumerate(zip(values['max'], dates)):
+                if date_val and date_val >= cutoff_time:
+                    wind_max_list.append(wind_val * 3.6)  # המרה ל-km/h
+                    wind_max_dates.append(date_val)
+            
+            if wind_max_list:
+                wind_max = round(max(wind_max_list), 1)
+                wind_max_idx = wind_max_list.index(max(wind_max_list))
+                wind_max_time = wind_max_dates[wind_max_idx]
     
     if wind_dir_sensor and 'values' in wind_dir_sensor:
         values = wind_dir_sensor['values']
@@ -142,6 +176,8 @@ def extract_weather_data():
     
     # עדכון וחישוב משקעים עונתיים (שיטת צבירה)
     rain_season = update_seasonal_rain(rain_today)
+    
+    print(f"🌧️  גשם עונתי מחושב: {rain_season} מ\"מ")
     
     # חישוב גשם ל-7 ימים אחרונים (לגרף)
     rain_7d_daily = get_7day_rain(meta)
@@ -232,8 +268,11 @@ def update_seasonal_rain(rain_today):
     """
     עדכון משקעים עונתיים - שיטת צבירה
     """
+    print(f"📊 עדכון משקעים עונתיים - גשם היום: {rain_today} מ\"מ")
+    
     # טעינת נתונים קיימים
     season_data = load_season_data()
+    print(f"📂 נתונים קיימים: {season_data}")
     
     # בדיקה אם צריך לאפס (1 באוקטובר)
     now = datetime.utcnow()
@@ -253,6 +292,7 @@ def update_seasonal_rain(rain_today):
     today_str = now.strftime('%Y-%m-%d')
     if season_data.get('last_update') == today_str:
         # כבר עדכנו היום - לא להוסיף שוב
+        print(f"✅ כבר עודכן היום - מחזיר: {season_data['season_rain']} מ\"מ")
         return season_data['season_rain']
     
     # עדכון הסכום
@@ -267,6 +307,7 @@ def update_seasonal_rain(rain_today):
     save_season_data(season_data)
     
     print(f"☔ עדכון עונתי: {old_rain} + {rain_today} = {new_rain} מ\"מ")
+    print(f"💾 נשמר בהצלחה!")
     
     return new_rain
 
@@ -316,9 +357,11 @@ def main():
     print(f"   📈 מקסימום: {weather_data['temperature']['max']}°C ({weather_data['temperature']['max_time']})")
     print(f"   📉 מינימום: {weather_data['temperature']['min']}°C ({weather_data['temperature']['min_time']})")
     print(f"   💨 רוח: {weather_data['wind']['speed']} קמ\"ש {weather_data['wind']['direction']}")
+    print(f"   💨🔝 רוח מקסימלית (24 שעות): {weather_data['wind']['max']} קמ\"ש ({weather_data['wind']['max_time']})")
     print(f"   🌧️  גשם היום: {weather_data['rain']['today']} מ\"מ")
     print(f"   📅 גשם שבועי: {weather_data['rain']['week']} מ\"מ")
     print(f"   ☔ גשם עונתי: {weather_data['rain']['season']} מ\"מ")
 
 if __name__ == "__main__":
     main()
+
