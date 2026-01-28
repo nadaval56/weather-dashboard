@@ -76,14 +76,25 @@ def extract_weather_data():
     data = raw_24h.get('data', [])
     dates_raw = raw_24h.get('dates', [])
     
+    # Debug - ראה פורמט תאריך מקורי
+    if dates_raw:
+        print(f"🕐 דוגמה לתאריך מקורי: '{dates_raw[0]}'")
+        print(f"🕐 דוגמה אחרונה: '{dates_raw[-1]}'")
+    
     # המרת dates ל-datetime objects
     dates = []
     for date_str in dates_raw:
         try:
-            # פורמט: "2026-01-28T10:00:00"
-            date_obj = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S")
+            # ניסיון 1: פורמט עם timezone
+            if 'Z' in date_str or '+' in date_str:
+                # ISO format with timezone
+                date_obj = datetime.fromisoformat(date_str.replace('Z', '+00:00'))
+            else:
+                # פורמט: "2026-01-28T10:00:00"
+                date_obj = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S")
             dates.append(date_obj)
-        except:
+        except Exception as e:
+            print(f"⚠️  כשל בהמרת תאריך: '{date_str}' - {e}")
             dates.append(None)
     
     # Debug - בדיקת dates
@@ -387,3 +398,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+            
