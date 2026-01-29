@@ -416,7 +416,7 @@
 
         <!-- Footer -->
         <div class="footer">
-            <p style="font-size: 1.1em; margin-bottom: 20px;">מופעל על ידי: <strong>נדב אלשיך</strong></p>
+            <p style="font-size: 1.1em; margin-bottom: 20px;">מופעל באמצעות: <strong>נדב אלשיך</strong></p>
             <div class="logos">
                 <a href="https://banknote.co.il/" class="logo-link" target="_blank">
                     Banknote - שטרות, מטבעות ובולים
@@ -434,13 +434,13 @@
             const now = new Date();
             const hour = now.getHours();
             
-            const rain = data.rain.today || 0;
+            const rainLastHour = data.rain.lastHour || 0;  // גשם בשעה האחרונה!
             const solar = data.solarPanel || 0;
             
-            console.log(`שעה: ${hour}, פאנל: ${solar} mV, גשם: ${rain} מ"מ`);
+            console.log(`שעה: ${hour}, פאנל: ${solar} mV, גשם בשעה: ${rainLastHour} מ"מ`);
             
-            // 1. גשם תמיד גובר
-            if (rain > 0.5) {
+            // 1. גשם בשעה האחרונה תמיד גובר
+            if (rainLastHour > 0.3) {
                 return "🌧️";
             }
             
