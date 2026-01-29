@@ -416,7 +416,7 @@
 
         <!-- Footer -->
         <div class="footer">
-            <p style="font-size: 1.1em; margin-bottom: 20px;">מופעל באמצעות: <strong>נדב אלשיך</strong></p>
+            <p style="font-size: 1.1em; margin-bottom: 20px;">מופעל על ידי: <strong>נדב אלשיך</strong></p>
             <div class="logos">
                 <a href="https://banknote.co.il/" class="logo-link" target="_blank">
                     Banknote - שטרות, מטבעות ובולים
@@ -548,7 +548,8 @@
         
         function updateRainChart(rainData) {
             const chartBars = document.querySelectorAll('.chart-bar');
-            const maxRain = Math.max(...rainData, 1);
+            // הוספת 20% מרווח מעל הערך המקסימלי
+            const maxRain = Math.max(...rainData, 1) * 1.2;
             
             // חישוב שמות ימים דינמית
             const dayNames = ['א׳', 'ב׳', 'ג׳', 'ד׳', 'ה׳', 'ו׳', 'ש׳'];
