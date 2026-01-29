@@ -24,7 +24,7 @@ if not PUBLIC_KEY or not PRIVATE_KEY:
 API_BASE = "https://api.fieldclimate.com/v2"
 
 # גשם שנרשם לפני הקמת התחנה (ניתן לעדכן כשיהיו נתונים מדויקים יותר)
-PRE_STATION_RAIN = 15.0  # מ"מ - מדידות מתחנות אחרות לפני הקמת התחנה
+PRE_STATION_RAIN = 25.0  # מ"מ - מדידות מתחנות אחרות לפני הקמת התחנה
 
 def make_request(path):
     """
