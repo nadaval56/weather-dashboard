@@ -1,5 +1,5 @@
 {
-  "last_update": "2026-01-29T20:54:05.830722Z",
+  "last_update": "2026-01-29T21:24:13.961891Z",
   "station_name": "כוכב השחר",
   "temperature": {
     "current": 11.8,
@@ -18,7 +18,7 @@
     "today": 2.2,
     "lastHour": 0,
     "week": 12.4,
-    "season": 240.4,
+    "season": 250.4,
     "daily_7d": [
       0,
       4.6,
