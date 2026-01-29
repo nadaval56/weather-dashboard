@@ -24,7 +24,7 @@ if not PUBLIC_KEY or not PRIVATE_KEY:
 API_BASE = "https://api.fieldclimate.com/v2"
 
 # גשם שנרשם לפני הקמת התחנה (ניתן לעדכן כשיהיו נתונים מדויקים יותר)
-PRE_STATION_RAIN = 25.0  # מ"מ - מדידות מתחנות אחרות לפני הקמת התחנה
+PRE_STATION_RAIN = 15.0  # מ"מ - מדידות מתחנות אחרות לפני הקמת התחנה
 
 def make_request(path):
     """
@@ -121,39 +121,18 @@ def extract_weather_data():
         if 'avg' in values and values['avg']:
             current_temp = values['avg'][-1]  # ערך אחרון
         
-        # סינון רק ערכים מ-24 שעות אחרונות
-        now = datetime.utcnow()
-        # המרה לזמן מקומי (UTC+2) כדי להתאים ל-dates
-        now_local = now + timedelta(hours=2)
-        cutoff_time = now_local - timedelta(hours=24)
-        
+        # ה-API מחזיר 24 שעות - פשוט נקח את המקסימום והמינימום
         if 'max' in values and values['max'] and dates:
-            temp_max_list = []
-            temp_max_dates = []
-            
-            for temp_val, date_val in zip(values['max'], dates):
-                if date_val and date_val >= cutoff_time:
-                    temp_max_list.append(temp_val)
-                    temp_max_dates.append(date_val)
-            
-            if temp_max_list:
-                temp_max = max(temp_max_list)
-                temp_max_idx = temp_max_list.index(temp_max)
-                temp_max_time = temp_max_dates[temp_max_idx]
+            temp_max_list = values['max']
+            temp_max = max(temp_max_list)
+            temp_max_idx = temp_max_list.index(temp_max)
+            temp_max_time = dates[temp_max_idx]
         
         if 'min' in values and values['min'] and dates:
-            temp_min_list = []
-            temp_min_dates = []
-            
-            for temp_val, date_val in zip(values['min'], dates):
-                if date_val and date_val >= cutoff_time:
-                    temp_min_list.append(temp_val)
-                    temp_min_dates.append(date_val)
-            
-            if temp_min_list:
-                temp_min = min(temp_min_list)
-                temp_min_idx = temp_min_list.index(temp_min)
-                temp_min_time = temp_min_dates[temp_min_idx]
+            temp_min_list = values['min']
+            temp_min = min(temp_min_list)
+            temp_min_idx = temp_min_list.index(temp_min)
+            temp_min_time = dates[temp_min_idx]
     
     # רוח
     current_wind_speed = None
@@ -166,34 +145,13 @@ def extract_weather_data():
         if 'avg' in values and values['avg']:
             # המרה מ-m/s ל-km/h
             current_wind_speed = round(values['avg'][-1] * 3.6, 1)
+        
+        # ה-API מחזיר 24 שעות - פשוט נקח את המקסימום
         if 'max' in values and values['max'] and dates:
-            # סינון רק ערכים מ-24 שעות אחרונות לפי timestamp
-            now = datetime.utcnow()
-            # המרה לזמן מקומי (UTC+2) כדי להתאים ל-dates
-            now_local = now + timedelta(hours=2)
-            cutoff_time = now_local - timedelta(hours=24)
-            
-            print(f"🌬️  רוח - עכשיו (מקומי): {now_local}, סף: {cutoff_time}")
-            print(f"🌬️  דוגמת dates: {dates[0] if dates else None} עד {dates[-1] if dates else None}")
-            
-            wind_max_list = []
-            wind_max_dates = []
-            
-            for i, (wind_val, date_val) in enumerate(zip(values['max'], dates)):
-                if date_val and date_val >= cutoff_time:
-                    wind_kmh = wind_val * 3.6
-                    wind_max_list.append(wind_kmh)
-                    wind_max_dates.append(date_val)
-                    # Debug - הדפס את 3 הערכים הגבוהים ביותר
-                    if wind_kmh > 20:
-                        print(f"🌬️  רוח גבוהה: {wind_kmh:.1f} קמ\"ש בזמן {date_val}")
-            
-            print(f"🌬️  סה\"כ {len(wind_max_list)} ערכי רוח אחרי סינון (מתוך {len(values['max'])})")
-            
-            if wind_max_list:
-                wind_max = round(max(wind_max_list), 1)
-                wind_max_idx = wind_max_list.index(max(wind_max_list))
-                wind_max_time = wind_max_dates[wind_max_idx]
+            wind_max_list = [v * 3.6 for v in values['max']]  # המרה ל-km/h
+            wind_max = round(max(wind_max_list), 1)
+            wind_max_idx = wind_max_list.index(max(wind_max_list))
+            wind_max_time = dates[wind_max_idx]
     
     if wind_dir_sensor and 'values' in wind_dir_sensor:
         values = wind_dir_sensor['values']
@@ -206,10 +164,22 @@ def extract_weather_data():
     rain_today = meta.get('rainCurrentDay', {}).get('sum', 0)
     rain_7d = meta.get('rain7d', {}).get('sum', 0)
     
+    # חישוב גשם בשעה האחרונה (4 דגימות אחרונות × 15 דקות)
+    rain_last_hour = 0
+    if rain_sensor and 'values' in rain_sensor:
+        rain_values = rain_sensor['values']
+        # נסה למצוא את הערכים - יכול להיות 'sum' או 'raw'
+        if 'sum' in rain_values and rain_values['sum']:
+            # קח את 4 הערכים האחרונים (שעה אחרונה)
+            rain_last_hour = sum(rain_values['sum'][-4:]) if len(rain_values['sum']) >= 4 else 0
+        elif 'raw' in rain_values and rain_values['raw']:
+            rain_last_hour = sum(rain_values['raw'][-4:]) if len(rain_values['raw']) >= 4 else 0
+    
     # עדכון וחישוב משקעים עונתיים (שיטת צבירה)
     rain_season = update_seasonal_rain(rain_today)
     
     print(f"🌧️  גשם עונתי מחושב: {rain_season} מ\"מ")
+    print(f"🌧️  גשם בשעה האחרונה: {rain_last_hour} מ\"מ")
     
     # חישוב גשם ל-7 ימים אחרונים (לגרף)
     rain_7d_daily = get_7day_rain(meta)
@@ -233,6 +203,7 @@ def extract_weather_data():
         },
         'rain': {
             'today': round(rain_today, 1),
+            'lastHour': round(rain_last_hour, 1),  # גשם בשעה האחרונה
             'week': round(rain_7d, 1),
             'season': round(rain_season + PRE_STATION_RAIN, 1),  # כולל גשם טרום-תחנה
             'daily_7d': rain_7d_daily
