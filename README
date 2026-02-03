@@ -1,0 +1,110 @@
+# 🌤️ דשבורד מזג אויר - כוכב השחר
+
+דשבורד מזג אויר פשוט ונגיש המציג נתונים מתחנת FieldClimate בכוכב השחר.
+
+## 📋 מה זה עושה?
+
+- **מציג** טמפרטורה, רוח ומשקעים בזמן אמת
+- **מתעדכן** אוטומטית כל 30 דקות
+- **פשוט** ונוח לכל תושבי היישוב
+
+## 🚀 התקנה
+
+### שלב 1: יצירת Repository ב-GitHub
+
+1. צור repository חדש ב-GitHub בשם `weather-dashboard`
+2. העלה את הקבצים הבאים:
+   - `index.html` (שנה את `weather-demo.html` לשם זה)
+   - `fetch_weather_final.py`
+   - `.github/workflows/update-weather.yml`
+
+### שלב 2: הגדרת Secrets
+
+ב-GitHub, לך ל: **Settings** → **Secrets and variables** → **Actions** → **New repository secret**
+
+הוסף 3 secrets:
+
+### שלב 3: הפעלת GitHub Pages
+
+1. לך ל: **Settings** → **Pages**
+2. תחת **Source**, בחר: `Deploy from a branch`
+3. תחת **Branch**, בחר: `main` ו-`/ (root)`
+4. לחץ **Save**
+
+### שלב 4: הרצה ראשונה
+
+1. לך ל-**Actions**
+2. בחר את ה-workflow "Update Weather Data"
+3. לחץ **Run workflow**
+
+אחרי כמה דקות - האתר יהיה זמין ב:
+```
+https://<username>.github.io/weather-dashboard/
+```
+
+## 📁 מבנה הפרויקט
+
+```
+weather-dashboard/
+├── index.html                    # דף האתר
+├── fetch_weather_final.py        # סקריפט לשליפת נתונים
+├── weather-data.json             # נתונים (נוצר אוטומטית)
+└── .github/
+    └── workflows/
+        └── update-weather.yml    # GitHub Actions
+```
+
+## 🔄 איך זה עובד?
+
+1. **GitHub Actions** מריץ את `fetch_weather_final.py` כל 30 דקות
+2. הסקריפט מושך נתונים מ-FieldClimate API
+3. הנתונים נשמרים ב-`weather-data.json`
+4. ה-HTML קורא את הקובץ ומציג אותו יפה
+
+## 🎨 התאמה אישית
+
+### שינוי תדירות העדכון
+
+ערוך את `.github/workflows/update-weather.yml`:
+
+```yaml
+schedule:
+  - cron: '*/15 * * * *'  # כל 15 דקות
+  - cron: '0 * * * *'     # כל שעה
+  - cron: '0 */6 * * *'   # כל 6 שעות
+```
+
+### שינוי עיצוב
+
+ערוך את `index.html` - כל ה-CSS נמצא בתוך הקובץ.
+
+## 💰 עלות
+
+- **GitHub Pages**: חינם
+- **GitHub Actions**: 2,000 דקות חינם/חודש (יותר מספיק!)
+- **FieldClimate API**: ₪240 + מע"מ לשנה
+
+## 🛠️ פתרון בעיות
+
+### הנתונים לא מתעדכנים
+
+1. בדוק ב-**Actions** אם ה-workflow רץ
+2. בדוק ש-Secrets מוגדרים נכון
+3. ודא שה-API subscription פעיל
+
+### האתר לא נטען
+
+1. ודא ש-GitHub Pages הופעל
+2. חכה 2-3 דקות אחרי השינוי הראשון
+3. בדוק שיש קובץ `weather-data.json` ב-repository
+
+## 📞 יצירת קשר
+
+**מפעיל**: נדב אלשיך  
+**אתרים**: 
+- [מעט צרי](https://מעטצרי.com)
+- [Banknote](https://banknote.co.il)
+
+---
+
+**נוצר עם ❤️ לקהילת כוכב השחר**

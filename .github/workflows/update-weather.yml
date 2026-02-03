@@ -1,0 +1,39 @@
+name: Update Weather Data
+
+on:
+  schedule:
+    # רץ כל 30 דקות
+    - cron: '*/30 * * * *'
+  workflow_dispatch:  # מאפשר הרצה ידנית
+
+jobs:
+  update-weather:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          pip install requests
+      
+      - name: Fetch weather data
+        env:
+          STATION_ID: ${{ secrets.STATION_ID }}
+          PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+        run: |
+          python fetch_weather_final.py
+      
+      - name: Commit and push if changed
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add weather-data.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "🌤️ עדכון נתוני מזג אויר $(date +'%Y-%m-%d %H:%M')" && git push)

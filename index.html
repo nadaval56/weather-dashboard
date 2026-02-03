@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מזג אויר - כוכב השחר</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #F7FAFC 0%, #EDF2F7 100%);
+            min-height: 100vh;
+            padding: 20px;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4A5568 0%, #2D3748 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .last-update {
+            opacity: 0.9;
+            font-size: 0.9em;
+        }
+
+        .current-weather {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(to bottom, #f8f9ff 0%, #ffffff 100%);
+        }
+
+        .weather-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .current-temp {
+            font-size: 4em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .temp-label {
+            color: #666;
+            font-size: 1.2em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+            padding: 25px 20px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .stat-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #333;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .stat-time {
+            color: #999;
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+
+        .section {
+            padding: 30px;
+            border-top: 1px solid #eee;
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .wind-section {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .wind-current {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .wind-info {
+            text-align: center;
+        }
+
+        .wind-speed {
+            font-size: 2em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .wind-direction {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .rain-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .rain-stat {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+            padding: 20px 15px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .rain-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #2196F3;
+        }
+
+        .rain-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .chart-container {
+            margin-top: 20px;
+            height: 180px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+            border-radius: 20px;
+            padding: 15px 15px 35px 15px;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 100%;
+            gap: 5px;
+        }
+
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(to top, #2196F3, #64B5F6);
+            border-radius: 5px 5px 0 0;
+            position: relative;
+            transition: transform 0.2s;
+        }
+
+        .chart-bar:hover {
+            transform: scaleY(1.05);
+        }
+
+        .chart-bar-value {
+            position: absolute;
+            top: -25px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.8em;
+            font-weight: bold;
+            color: #2196F3;
+        }
+
+        .chart-bar-label {
+            position: absolute;
+            bottom: -25px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.7em;
+            color: #666;
+        }
+
+        .footer {
+            background: #f8f9ff;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #eee;
+        }
+
+        .footer p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .logos {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background: white;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #667eea;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .logo-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .current-temp {
+                font-size: 3em;
+            }
+
+            .weather-icon {
+                font-size: 60px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            .wind-current {
+                flex-direction: column;
+            }
+
+            .logos {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🌡️ מזג אויר - כוכב השחר</h1>
+            <div class="last-update">טוען...</div>
+        </div>
+
+        <!-- Current Weather -->
+        <div class="current-weather">
+            <div class="weather-icon">⏳</div>
+            <div class="current-temp">...</div>
+            <div class="temp-label">עכשיו</div>
+        </div>
+
+        <!-- Temperature Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon" style="color: #f44336; font-size: 3em;">▲</div>
+                <div class="stat-label">מקסימום ביממה האחרונה</div>
+                <div class="stat-value">...</div>
+                <div class="stat-time">--:--</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="color: #2196F3; font-size: 3em;">▼</div>
+                <div class="stat-label">מינימום ביממה האחרונה</div>
+                <div class="stat-value">...</div>
+                <div class="stat-time">--:--</div>
+            </div>
+        </div>
+
+        <!-- Wind Section -->
+        <div class="section">
+            <h2 class="section-title">💨 רוח</h2>
+            <div class="wind-section">
+                <div class="wind-current">
+                    <div class="wind-info">
+                        <div class="wind-speed">...</div>
+                        <div class="wind-direction">...</div>
+                    </div>
+                </div>
+                <div style="text-align: center; color: #666; margin-top: 15px;">
+                    <div style="margin-bottom: 5px;">רוח מקסימלית ב-24 שעות האחרונות:</div>
+                    <div style="font-size: 1.3em;"><strong>...</strong> (--:--)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rain Section -->
+        <div class="section">
+            <h2 class="section-title">🌧️ משקעים</h2>
+            
+            <!-- Seasonal Rain - Most Important -->
+            <div style="text-align: center; margin-bottom: 30px; padding: 30px 20px; background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%); border-radius: 20px; box-shadow: 0 8px 25px rgba(33, 150, 243, 0.15); border: 2px solid #2196F3;">
+                <div style="font-size: 0.9em; color: #1976D2; margin-bottom: 10px; font-weight: bold;">מתחילת העונה</div>
+                <div class="rain-value" style="font-size: 3em; color: #1565C0; display: inline;">...</div>
+                <div style="display: inline; font-size: 1.5em; color: #1976D2; margin-right: 10px;">מ"מ</div>
+            </div>
+            
+            <!-- Today and Weekly -->
+            <div class="rain-stats">
+                <div class="rain-stat">
+                    <div class="rain-value">...</div>
+                    <div class="rain-label">מ"מ היום</div>
+                </div>
+                <div class="rain-stat">
+                    <div class="rain-value">...</div>
+                    <div class="rain-label">מ"מ השבוע</div>
+                </div>
+            </div>
+
+            <!-- 7 Days Chart -->
+            <div style="text-align: center; color: #666; margin-top: 30px; margin-bottom: 10px; font-weight: bold;">
+                משקעים יומיים - שבוע אחרון (מ"מ)
+            </div>
+            <div class="chart-container">
+                <div class="chart-bars">
+                    <div class="chart-bar" style="height: 0%;">
+                        <div class="chart-bar-value">0</div>
+                        <div class="chart-bar-label">...</div>
+                    </div>
+                    <div class="chart-bar" style="height: 0%;">
+                        <div class="chart-bar-value">0</div>
+                        <div class="chart-bar-label">...</div>
+                    </div>
+                    <div class="chart-bar" style="height: 0%;">
+                        <div class="chart-bar-value">0</div>
+                        <div class="chart-bar-label">...</div>
+                    </div>
+                    <div class="chart-bar" style="height: 0%;">
+                        <div class="chart-bar-value">0</div>
+                        <div class="chart-bar-label">...</div>
+                    </div>
+                    <div class="chart-bar" style="height: 0%;">
+                        <div class="chart-bar-value">0</div>
+                        <div class="chart-bar-label">...</div>
+                    </div>
+                    <div class="chart-bar" style="height: 0%;">
+                        <div class="chart-bar-value">0</div>
+                        <div class="chart-bar-label">...</div>
+                    </div>
+                    <div class="chart-bar" style="height: 0%;">
+                        <div class="chart-bar-value">0</div>
+                        <div class="chart-bar-label">...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p style="font-size: 1.1em; margin-bottom: 20px;">מופעל באמצעות: <strong>נדב אלשיך</strong></p>
+            <div class="logos">
+                <a href="https://banknote.co.il/" class="logo-link" target="_blank">
+                    Banknote - שטרות, מטבעות ובולים
+                </a>
+                <a href="https://holisticcenter.co.il/" class="logo-link" target="_blank">
+                    מעט צרי - רפואה משלימה
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // פונקציה לקביעת אייקון מזג אויר דינמי
+        function getWeatherIcon(data) {
+            const now = new Date();
+            const hour = now.getHours();
+            
+            const rainLastHour = data.rain.lastHour || 0;  // גשם בשעה האחרונה!
+            const solar = data.solarPanel || 0;
+            
+            console.log(`שעה: ${hour}, פאנל: ${solar} mV, גשם בשעה: ${rainLastHour} מ"מ`);
+            
+            // 1. גשם בשעה האחרונה תמיד גובר
+            if (rainLastHour > 0.3) {
+                return "🌧️";
+            }
+            
+            // 2. לילה - רק בשעות קיצוניות או כשאין שמש בכלל
+            const isDeepNight = (hour < 5 || hour > 20);
+            const isNight = isDeepNight || (solar < 50 && (hour < 7 || hour > 18));
+            
+            if (isNight) {
+                return "🌙";
+            }
+            
+            // 3. יום - לפי פאנל סולארי
+            if (solar > 10500) return "☀️";      // שמש מלאה
+            if (solar > 9000) return "🌤️";       // שמש עם עננות קלה  
+            if (solar > 7000) return "⛅";       // חלקית מעונן
+            if (solar > 4000) return "🌥️";      // מעונן
+            return "☁️";                         // מעונן מאוד
+        }
+        
+        // טעינת נתוני מזג אויר
+        async function loadWeatherData() {
+            try {
+                // Cache busting - מאלץ טעינה מחדש
+                const response = await fetch('./weather-data.json?t=' + Date.now());
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                console.log('Data loaded:', data);
+                
+                // עדכון אייקון דינמי
+                const weatherIcon = getWeatherIcon(data);
+                const iconElement = document.querySelector('.weather-icon');
+                if (iconElement) {
+                    iconElement.textContent = weatherIcon;
+                }
+                
+                // עדכון כותרת
+                const h1 = document.querySelector('h1');
+                if (h1) h1.textContent = '🌡️ מזג אויר - ' + data.station_name;
+                
+                // עדכון זמן עדכון
+                const updateTime = new Date(data.last_update);
+                const lastUpdateElem = document.querySelector('.last-update');
+                if (lastUpdateElem) {
+                    lastUpdateElem.textContent = 'עודכן לאחרונה: ' + updateTime.toLocaleString('he-IL');
+                }
+                
+                // טמפרטורה נוכחית
+                const currentTempElem = document.querySelector('.current-temp');
+                if (currentTempElem) {
+                    currentTempElem.textContent = data.temperature.current + '°C';
+                }
+                
+                // טמפרטורה מקסימלית
+                const statValues = document.querySelectorAll('.stat-value');
+                if (statValues[0]) statValues[0].textContent = data.temperature.max + '°C';
+                
+                const statTimes = document.querySelectorAll('.stat-time');
+                if (statTimes[0]) statTimes[0].textContent = data.temperature.max_time;
+                
+                // טמפרטורה מינימלית
+                if (statValues[1]) statValues[1].textContent = data.temperature.min + '°C';
+                if (statTimes[1]) statTimes[1].textContent = data.temperature.min_time;
+                
+                // רוח נוכחית
+                const windSpeedElem = document.querySelector('.wind-speed');
+                if (windSpeedElem) {
+                    windSpeedElem.textContent = data.wind.speed + ' קמ"ש';
+                }
+                
+                const windDirElem = document.querySelector('.wind-direction');
+                if (windDirElem) {
+                    windDirElem.textContent = data.wind.direction;
+                }
+                
+                // רוח מקסימלית
+                const windMaxElement = document.querySelector('.wind-section').querySelectorAll('strong')[0];
+                if (windMaxElement) {
+                    windMaxElement.textContent = data.wind.max + ' קמ"ש';
+                }
+                const windMaxTimeElement = document.querySelector('.wind-section').querySelector('div[style*="font-size: 1.3em"]');
+                if (windMaxTimeElement) {
+                    windMaxTimeElement.innerHTML = `<strong>${data.wind.max} קמ"ש</strong> (${data.wind.max_time})`;
+                }
+                
+                // משקעים
+                const rainValues = document.querySelectorAll('.rain-value');
+                if (rainValues[0]) rainValues[0].textContent = data.rain.season;
+                if (rainValues[1]) rainValues[1].textContent = data.rain.today;
+                if (rainValues[2]) rainValues[2].textContent = data.rain.week;
+                
+                // גרף משקעים
+                updateRainChart(data.rain.daily_7d);
+                
+            } catch (error) {
+                console.error('שגיאה בטעינת נתונים:', error);
+                console.error('Error details:', error.message);
+                document.querySelector('.last-update').textContent = 'שגיאה בטעינת נתונים - ' + error.message;
+            }
+        }
+        
+        function updateRainChart(rainData) {
+            const chartBars = document.querySelectorAll('.chart-bar');
+            // הוספת 20% מרווח מעל הערך המקסימלי
+            const maxRain = Math.max(...rainData, 1) * 1.2;
+            
+            // חישוב שמות ימים דינמית
+            const dayNames = ['א׳', 'ב׳', 'ג׳', 'ד׳', 'ה׳', 'ו׳', 'ש׳'];
+            const today = new Date();
+            const chartLabels = [];
+            
+            // בניית רשימת שמות ימים - מ-6 ימים אחורה עד היום
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date(today);
+                date.setDate(today.getDate() - i);
+                const dayOfWeek = date.getDay();
+                
+                if (i === 0) {
+                    chartLabels.push('היום');
+                } else if (i === 1) {
+                    chartLabels.push('אתמול');
+                } else {
+                    chartLabels.push(dayNames[dayOfWeek]);
+                }
+            }
+            
+            rainData.forEach((rain, index) => {
+                if (chartBars[index]) {
+                    const percentage = (rain / maxRain) * 100;
+                    chartBars[index].style.height = percentage + '%';
+                    chartBars[index].querySelector('.chart-bar-value').textContent = rain;
+                    chartBars[index].querySelector('.chart-bar-label').textContent = chartLabels[index];
+                }
+            });
+        }
+        
+        // טעינה ראשונית - רק אחרי שהדף נטען לגמרי
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadWeatherData);
+        } else {
+            loadWeatherData();
+        }
+        
+        // רענון כל 30 דקות
+        setInterval(loadWeatherData, 30 * 60 * 1000);
+    </script>
+</body>
+</html>
