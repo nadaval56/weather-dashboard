@@ -109,11 +109,11 @@ def extract_weather_data():
         elif 'Precipitation' in name:
             rain_sensor = sensor
     
-    # הגדר "היום" בזמן ישראל — כדי לפילטר רק את הנתונים של היום מתוך ה-raw
+    # חלון של 24 שעות אחרונות (גולר)
     now_israel = datetime.utcnow() + timedelta(hours=2)
-    today_str = now_israel.strftime('%Y-%m-%d')
-    today_indices = [i for i, d in enumerate(dates) if d and d.strftime('%Y-%m-%d') == today_str]
-    print(f"📊 היום: {today_str}, נמצאו {len(today_indices)} דגימות מ-raw")
+    cutoff = now_israel - timedelta(hours=24)
+    last_24h_indices = [i for i, d in enumerate(dates) if d and d >= cutoff]
+    print(f"📊 24 שעות אחרונות: {len(last_24h_indices)} דגימות מ-raw")
 
     # טמפרטורה נוכחית — הערך האחרון מ-raw
     current_temp = None
@@ -127,16 +127,16 @@ def extract_weather_data():
         if 'avg' in values and values['avg']:
             current_temp = values['avg'][-1]
 
-        # מקס/מין — מ-raw אבל רק היום (פילטר לפי today_indices)
-        if today_indices and 'max' in values and values['max']:
-            today_max_vals = [values['max'][i] for i in today_indices]
-            temp_max = max(today_max_vals)
-            temp_max_time = dates[today_indices[today_max_vals.index(temp_max)]]
+        # מקס/מין — מ-raw, 24 שעות אחרונות
+        if last_24h_indices and 'max' in values and values['max']:
+            last_24h_max_vals = [values['max'][i] for i in last_24h_indices]
+            temp_max = max(last_24h_max_vals)
+            temp_max_time = dates[last_24h_indices[last_24h_max_vals.index(temp_max)]]
 
-        if today_indices and 'min' in values and values['min']:
-            today_min_vals = [values['min'][i] for i in today_indices]
-            temp_min = min(today_min_vals)
-            temp_min_time = dates[today_indices[today_min_vals.index(temp_min)]]
+        if last_24h_indices and 'min' in values and values['min']:
+            last_24h_min_vals = [values['min'][i] for i in last_24h_indices]
+            temp_min = min(last_24h_min_vals)
+            temp_min_time = dates[last_24h_indices[last_24h_min_vals.index(temp_min)]]
 
     # Fallback — אם ה-raw לא כולל היום, ה-meta יש לפחות מינימום
     if temp_min is None:
@@ -154,11 +154,11 @@ def extract_weather_data():
             # המרה מ-m/s ל-km/h
             current_wind_speed = round(values['avg'][-1] * 3.6, 1)
         
-        # רוח מקסימלית — רק היום מתוך ה-raw
-        if today_indices and 'max' in values and values['max']:
-            today_wind_max_vals = [values['max'][i] * 3.6 for i in today_indices]
-            wind_max = round(max(today_wind_max_vals), 1)
-            wind_max_time = dates[today_indices[today_wind_max_vals.index(max(today_wind_max_vals))]]
+        # רוח מקסימלית — 24 שעות אחרונות מ-raw
+        if last_24h_indices and 'max' in values and values['max']:
+            last_24h_wind_max_vals = [values['max'][i] * 3.6 for i in last_24h_indices]
+            wind_max = round(max(last_24h_wind_max_vals), 1)
+            wind_max_time = dates[last_24h_indices[last_24h_wind_max_vals.index(max(last_24h_wind_max_vals))]]
     
     if wind_dir_sensor and 'values' in wind_dir_sensor:
         values = wind_dir_sensor['values']
@@ -166,6 +166,7 @@ def extract_weather_data():
             wind_deg = values['last'][-1]
             # המרה לכיוון טקסט
             wind_direction = degrees_to_direction(wind_deg)
+
 
     
     # משקעים
@@ -186,14 +187,8 @@ def extract_weather_data():
     # עדכון וחישוב משקעים עונתיים (שיטת צבירה)
     rain_season = update_seasonal_rain(rain_today)
     
-    # פאנל סולארי (מ-meta) — משמש לקביעת אייקון יום/לילה
-    # ה-API מחזיר את הערך ישר כ-int, לא כ-dict
-    solar_raw = meta.get('solarPanel', 0)
-    solar_panel = solar_raw if isinstance(solar_raw, (int, float)) else solar_raw.get('last', 0)
-    
     print(f"🌧️  גשם עונתי מחושב: {rain_season} מ\"מ")
     print(f"🌧️  גשם בשעה האחרונה: {rain_last_hour} מ\"מ")
-    print(f"☀️  פאנל סולארי: {solar_panel} mV")
     
     # חישוב גשם ל-7 ימים אחרונים (לגרף)
     rain_7d_daily = get_7day_rain(meta)
@@ -202,7 +197,6 @@ def extract_weather_data():
     weather_data = {
         'last_update': datetime.utcnow().isoformat() + 'Z',
         'station_name': station_info.get('name', {}).get('custom', 'כוכב השחר'),
-        'solarPanel': solar_panel,
         'temperature': {
             'current': round(current_temp, 1) if current_temp else None,
             'max': round(temp_max, 1) if temp_max else None,
@@ -395,7 +389,6 @@ def main():
     print(f"   📉 מינימום: {weather_data['temperature']['min']}°C ({weather_data['temperature']['min_time']})")
     print(f"   💨 רוח: {weather_data['wind']['speed']} קמ\"ש {weather_data['wind']['direction']}")
     print(f"   💨🔝 רוח מקסימלית (24 שעות): {weather_data['wind']['max']} קמ\"ש ({weather_data['wind']['max_time']})")
-    print(f"   ☀️  פאנל סולארי: {weather_data['solarPanel']} mV")
     print(f"   🌧️  גשם היום: {weather_data['rain']['today']} מ\"מ")
     print(f"   📅 גשם שבועי: {weather_data['rain']['week']} מ\"מ")
     print(f"   ☔ גשם עונתי: {weather_data['rain']['season']} מ\"מ (כולל {PRE_STATION_RAIN} מ\"מ טרום-תחנה)")
