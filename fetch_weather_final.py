@@ -187,8 +187,14 @@ def extract_weather_data():
     # עדכון וחישוב משקעים עונתיים (שיטת צבירה)
     rain_season = update_seasonal_rain(rain_today)
     
+    # פאנל סולארי (מ-meta) — משמש לקביעת אייקון יום/לילה
+    # ה-API מחזיר את הערך ישר כ-int, לא כ-dict
+    solar_raw = meta.get('solarPanel', 0)
+    solar_panel = solar_raw if isinstance(solar_raw, (int, float)) else solar_raw.get('last', 0)
+    
     print(f"🌧️  גשם עונתי מחושב: {rain_season} מ\"מ")
     print(f"🌧️  גשם בשעה האחרונה: {rain_last_hour} מ\"מ")
+    print(f"☀️  פאנל סולארי: {solar_panel} mV")
     
     # חישוב גשם ל-7 ימים אחרונים (לגרף)
     rain_7d_daily = get_7day_rain(meta)
@@ -197,6 +203,7 @@ def extract_weather_data():
     weather_data = {
         'last_update': datetime.utcnow().isoformat() + 'Z',
         'station_name': station_info.get('name', {}).get('custom', 'כוכב השחר'),
+        'solarPanel': solar_panel,
         'temperature': {
             'current': round(current_temp, 1) if current_temp else None,
             'max': round(temp_max, 1) if temp_max else None,
@@ -389,6 +396,7 @@ def main():
     print(f"   📉 מינימום: {weather_data['temperature']['min']}°C ({weather_data['temperature']['min_time']})")
     print(f"   💨 רוח: {weather_data['wind']['speed']} קמ\"ש {weather_data['wind']['direction']}")
     print(f"   💨🔝 רוח מקסימלית (24 שעות): {weather_data['wind']['max']} קמ\"ש ({weather_data['wind']['max_time']})")
+    print(f"   ☀️  פאנל סולארי: {weather_data['solarPanel']} mV")
     print(f"   🌧️  גשם היום: {weather_data['rain']['today']} מ\"מ")
     print(f"   📅 גשם שבועי: {weather_data['rain']['week']} מ\"מ")
     print(f"   ☔ גשם עונתי: {weather_data['rain']['season']} מ\"מ (כולל {PRE_STATION_RAIN} מ\"מ טרום-תחנה)")
