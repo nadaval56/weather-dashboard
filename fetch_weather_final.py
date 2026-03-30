@@ -25,15 +25,13 @@ API_BASE = "https://api.fieldclimate.com/v2"
 # גשם שנרשם לפני הקמת התחנה
 PRE_STATION_RAIN = 25.0
 
-# שעון ישראל — תמיד נכון, גם בשעון קיץ וגם בשעון חורף
+# שעון ישראל — אוטומטי, כולל שעון קיץ/חורף
 ISRAEL_TZ = ZoneInfo("Asia/Jerusalem")
 
 def israel_now():
-    """מחזיר את השעה הנוכחית בישראל — כולל שעון קיץ/חורף אוטומטית"""
     return datetime.now(ISRAEL_TZ)
 
 def israel_today():
-    """מחזיר את תאריך היום בישראל כ-string"""
     return israel_now().strftime('%Y-%m-%d')
 
 def make_request(path):
@@ -63,7 +61,6 @@ def make_request(path):
         return None
 
 def load_season_data():
-    """טעינת נתוני עונה שמורים"""
     try:
         with open('rain_season.json', 'r', encoding='utf-8') as f:
             return json.load(f)
@@ -76,33 +73,63 @@ def load_season_data():
         }
 
 def save_season_data(season_data):
-    """שמירת נתוני עונה"""
     with open('rain_season.json', 'w', encoding='utf-8') as f:
         json.dump(season_data, f, ensure_ascii=False, indent=2)
 
-def update_seasonal_rain(rain_today):
+def calc_rain_from_raw(dates, rain_sensor):
     """
-    עדכון משקעים עונתיים — שיטת מקסימום יומי.
+    חישוב גשם יומי ישירות מנתוני raw לפי timestamp.
 
     הלוגיקה:
-      • שומרים dict של גשם לפי תאריך: daily_rain["2026-03-29"] = 4.6
-      • בכל run: daily_rain[היום] = max(ערך קיים, rain_today)
-      • season_total = legacy_season_rain + sum(daily_rain.values())
+      • כל דגימת raw יש לה timestamp בזמן ישראל
+      • מחברים את כל הדגימות לפי תאריך
+      • לא תלויים באיפוס של FieldClimate בחצות
 
-    היתרון: הערך היומי רק עולה, אף פעם לא יורד.
-    לא משנה אם FieldClimate איפס, אם GitHub Actions איחר,
-    או אם עברנו שעון — הנתון כבר נעול.
+    כך גשם שירד ב-23:58 מיוחס נכון לאותו יום,
+    גם אם ה-run קורה ב-00:40 של היום הבא.
     """
-    today = israel_today()
-    print(f"📊 עדכון גשם — היום: {today}, rain_today: {rain_today} מ\"מ")
+    daily = {}
+    if not rain_sensor or 'values' not in rain_sensor:
+        return daily
 
+    rain_values = rain_sensor['values']
+    key = 'sum' if 'sum' in rain_values and rain_values['sum'] else 'raw'
+    if key not in rain_values or not rain_values[key]:
+        return daily
+
+    vals = rain_values[key]
+    for i, date in enumerate(dates):
+        if date is None or i >= len(vals):
+            continue
+        v = vals[i]
+        if v is None:
+            continue
+        date_str = date.strftime('%Y-%m-%d')
+        daily[date_str] = round(daily.get(date_str, 0) + v, 2)
+
+    print(f"📊 גשם מ-raw לפי יום: { {k: v for k, v in daily.items() if v > 0} }")
+    return daily
+
+def update_seasonal_rain(raw_daily):
+    """
+    עדכון משקעים עונתיים — שיטת raw timestamps + max().
+
+    הלוגיקה:
+      • raw_daily = dict של {תאריך: סכום_גשם} מחושב מנתוני raw
+      • לכל תאריך: daily_rain[date] = max(קיים, חדש_מ_raw)
+      • season_total = legacy_season_rain + sum(daily_rain)
+
+    היתרון הכפול:
+      1. timestamps מה-raw — גשם ב-23:58 מיוחס נכון
+      2. max() — ערך שכבר נשמר לא יכול לרדת
+    """
     season_data = load_season_data()
 
-    # בדיקה אם צריך לאפס (תחילת עונה חדשה — 1 באוקטובר)
+    # בדיקת תחילת עונה חדשה
     now = israel_now()
     season_start_str = f"{now.year if now.month >= 10 else now.year - 1}-10-01"
     if season_data.get('season_start') != season_start_str:
-        print(f"🌱 עונה חדשה מתחילה: {season_start_str}")
+        print(f"🌱 עונה חדשה: {season_start_str}")
         season_data = {
             "season_start": season_start_str,
             "legacy_season_rain": 0.0,
@@ -111,22 +138,27 @@ def update_seasonal_rain(rain_today):
 
     daily_rain = season_data.get('daily_rain', {})
 
-    # עדכון — רק אם הערך החדש גדול מהקיים
-    existing = daily_rain.get(today, 0)
-    if rain_today > existing:
-        daily_rain[today] = rain_today
-        print(f"✅ עדכון {today}: {existing} → {rain_today} מ\"מ")
-    else:
-        daily_rain[today] = existing
-        print(f"✅ {today}: נשאר {existing} מ\"מ (rain_today={rain_today} לא גדול יותר)")
+    # עדכון כל תאריך שנמצא ב-raw — רק מעלה, אף פעם לא מוריד
+    for date_str, rain_val in raw_daily.items():
+        # רק תאריכים בתוך העונה
+        if date_str < season_start_str:
+            continue
+        existing = daily_rain.get(date_str, 0)
+        if rain_val > existing:
+            print(f"✅ עדכון {date_str}: {existing} → {rain_val} מ\"מ")
+            daily_rain[date_str] = rain_val
+        else:
+            if existing > 0:
+                print(f"   {date_str}: נשאר {existing} מ\"מ")
 
     season_data['daily_rain'] = daily_rain
     save_season_data(season_data)
 
     legacy = season_data.get('legacy_season_rain', 0)
-    total = legacy + sum(daily_rain.values())
-    print(f"☔ עונתי: legacy={legacy} + daily={round(sum(daily_rain.values()),1)} = {round(total,1)} מ\"מ")
-    return round(total, 1)
+    daily_sum = round(sum(daily_rain.values()), 1)
+    total = round(legacy + daily_sum, 1)
+    print(f"☔ עונתי: legacy={legacy} + daily={daily_sum} = {total} מ\"מ")
+    return total
 
 def extract_weather_data():
     """שליפה ועיבוד נתוני מזג אויר"""
@@ -205,8 +237,8 @@ def extract_weather_data():
         if 'last' in values and values['last']:
             wind_direction = degrees_to_direction(values['last'][-1])
 
-    # משקעים
-    rain_today = meta.get('rainCurrentDay', {}).get('sum', 0)
+    # גשם היום (לתצוגה בלבד — מ-meta כרגיל)
+    rain_today_display = meta.get('rainCurrentDay', {}).get('sum', 0)
     rain_7d = meta.get('rain7d', {}).get('sum', 0)
 
     # גשם בשעה האחרונה
@@ -217,8 +249,9 @@ def extract_weather_data():
         if key in rain_values and rain_values[key]:
             rain_last_hour = sum(rain_values[key][-4:]) if len(rain_values[key]) >= 4 else 0
 
-    # עדכון צבירה עונתית
-    season_total = update_seasonal_rain(rain_today)
+    # חישוב גשם יומי מ-raw timestamps → עדכון צבירה עונתית
+    raw_daily = calc_rain_from_raw(dates, rain_sensor)
+    season_total = update_seasonal_rain(raw_daily)
 
     # פאנל סולארי
     solar_raw = meta.get('solarPanel', 0)
@@ -247,7 +280,7 @@ def extract_weather_data():
             'max_time': format_time(wind_max_time) if wind_max_time else None
         },
         'rain': {
-            'today': round(rain_today, 1),
+            'today': round(rain_today_display, 1),
             'lastHour': round(rain_last_hour, 1),
             'week': round(rain_7d, 1),
             'season': round(season_total + PRE_STATION_RAIN, 1),
