@@ -9,6 +9,14 @@ on:
 permissions:
   contents: write
 
+# מבטיח שרק ריצה אחת פעילה בכל רגע נתון. אם מצטברת ריצה חדשה
+# (למשל אחרי שריצה קודמת נתקעה ב-queued בגלל מחסור ב-runners),
+# הריצה הישנה מבוטלת לטובת החדשה — תמיד רוצים את הנתונים העדכניים
+# ביותר, ולעולם לא שתי ריצות שדוחפות ל-git במקביל.
+concurrency:
+  group: update-weather
+  cancel-in-progress: true
+
 jobs:
   update-weather:
     runs-on: ubuntu-latest
