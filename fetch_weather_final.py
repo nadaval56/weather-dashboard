@@ -170,14 +170,21 @@ def update_seasonal_rain(raw_daily):
     save_season_data(season_data)
 
     # תיקונים ידניים — גוברים על המדידה, כולל כלפי מטה.
-    # למשל: {"2026-08-21": 0} מאפס יום שנרשם בו גשם שלא ירד באמת.
+    # שתי צורות נתמכות:
+    #   "2026-08-21": 0
+    #   "2026-08-21": {"mm": 0, "note": "קריאת שווא"}
     effective = dict(daily_rain)
-    for date_str, fixed_val in (season_data.get('overrides') or {}).items():
+    for date_str, override in (season_data.get('overrides') or {}).items():
         if date_str < season_start_str:
             continue
+        if isinstance(override, dict):
+            fixed_val, note = override.get('mm', 0), override.get('note', '')
+        else:
+            fixed_val, note = override, ''
         measured = effective.get(date_str, 0)
         if measured != fixed_val:
-            print(f"✏️  תיקון ידני {date_str}: {measured} → {fixed_val} מ\"מ")
+            reason = f" — {note}" if note else ""
+            print(f"✏️  תיקון ידני {date_str}: {measured} → {fixed_val} מ\"מ{reason}")
         effective[date_str] = fixed_val
 
     legacy = season_data.get('legacy_season_rain', 0)
