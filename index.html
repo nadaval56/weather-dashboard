@@ -541,7 +541,7 @@
                 if (rainValues[2]) rainValues[2].textContent = data.rain.week;
                 
                 // גרף משקעים
-                updateRainChart(data.rain.daily_7d);
+                updateRainChart(data.rain.daily_7d, data.rain.daily_7d_dates);
                 
             } catch (error) {
                 console.error('שגיאה בטעינת נתונים:', error);
@@ -550,28 +550,35 @@
             }
         }
         
-        function updateRainChart(rainData) {
+        function updateRainChart(rainData, rainDates) {
             const chartBars = document.querySelectorAll('.chart-bar');
             // הוספת 20% מרווח מעל הערך המקסימלי
             const maxRain = Math.max(...rainData, 1) * 1.2;
-            
-            // חישוב שמות ימים דינמית
+
+            // שמות הימים נגזרים מהתאריכים שבקובץ הנתונים עצמו.
+            // כך התווית תמיד מתארת את היום שבאמת נמדד בו הגשם,
+            // גם אם הדפדפן בשעון אחר או שהקובץ נטען מה-cache.
             const dayNames = ['א׳', 'ב׳', 'ג׳', 'ד׳', 'ה׳', 'ו׳', 'ש׳'];
-            const today = new Date();
+            const todayKey = new Date().toLocaleDateString('en-CA');
             const chartLabels = [];
-            
+
             // בניית רשימת שמות ימים - מ-6 ימים אחורה עד היום
             for (let i = 6; i >= 0; i--) {
-                const date = new Date(today);
-                date.setDate(today.getDate() - i);
-                const dayOfWeek = date.getDay();
-                
-                if (i === 0) {
+                const dateKey = (rainDates && rainDates[6 - i]) || null;
+                const date = dateKey ? new Date(dateKey + 'T12:00:00') : new Date();
+                if (!dateKey) date.setDate(date.getDate() - i);
+
+                // "היום"/"אתמול" לפי התאריך בקובץ, לא לפי מיקום בגרף
+                const daysBack = dateKey
+                    ? Math.round((new Date(todayKey + 'T12:00:00') - date) / 86400000)
+                    : i;
+
+                if (daysBack === 0) {
                     chartLabels.push('היום');
-                } else if (i === 1) {
+                } else if (daysBack === 1) {
                     chartLabels.push('אתמול');
                 } else {
-                    chartLabels.push(dayNames[dayOfWeek]);
+                    chartLabels.push(dayNames[date.getDay()]);
                 }
             }
             

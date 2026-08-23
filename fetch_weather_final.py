@@ -69,6 +69,7 @@ def load_season_data():
         return {
             "season_start": "2025-10-01",
             "legacy_season_rain": 0.0,
+            "overrides": {},
             "daily_rain": {}
         }
 
@@ -117,11 +118,16 @@ def update_seasonal_rain(raw_daily):
     הלוגיקה:
       • raw_daily = dict של {תאריך: סכום_גשם} מחושב מנתוני raw
       • לכל תאריך: daily_rain[date] = max(קיים, חדש_מ_raw)
-      • season_total = legacy_season_rain + sum(daily_rain)
+      • overrides = תיקונים ידניים שגוברים על המדידה (למשל קריאת שווא)
+      • season_total = legacy_season_rain + sum(יומן אפקטיבי)
 
     היתרון הכפול:
       1. timestamps מה-raw — גשם ב-23:58 מיוחס נכון
       2. max() — ערך שכבר נשמר לא יכול לרדת
+
+    מחזיר: (סכום עונתי, יומן אפקטיבי {תאריך: מ"מ})
+    היומן האפקטיבי הוא המקור היחיד לכל מספרי הגשם באתר —
+    היום, השבוע, הגרף והעונה — כדי שלא ייתכן שאותו גשם ייספר פעמיים.
     """
     season_data = load_season_data()
 
@@ -133,6 +139,7 @@ def update_seasonal_rain(raw_daily):
         season_data = {
             "season_start": season_start_str,
             "legacy_season_rain": 0.0,
+            "overrides": {},
             "daily_rain": {}
         }
 
@@ -152,13 +159,43 @@ def update_seasonal_rain(raw_daily):
                 print(f"   {date_str}: נשאר {existing} מ\"מ")
 
     season_data['daily_rain'] = daily_rain
+    season_data.setdefault('overrides', {})
     save_season_data(season_data)
 
+    # תיקונים ידניים — גוברים על המדידה, כולל כלפי מטה.
+    # למשל: {"2026-08-21": 0} מאפס יום שנרשם בו גשם שלא ירד באמת.
+    effective = dict(daily_rain)
+    for date_str, fixed_val in (season_data.get('overrides') or {}).items():
+        if date_str < season_start_str:
+            continue
+        measured = effective.get(date_str, 0)
+        if measured != fixed_val:
+            print(f"✏️  תיקון ידני {date_str}: {measured} → {fixed_val} מ\"מ")
+        effective[date_str] = fixed_val
+
     legacy = season_data.get('legacy_season_rain', 0)
-    daily_sum = round(sum(daily_rain.values()), 1)
+    daily_sum = round(sum(effective.values()), 1)
     total = round(legacy + daily_sum, 1)
     print(f"☔ עונתי: legacy={legacy} + daily={daily_sum} = {total} מ\"מ")
-    return total
+    return total, effective
+
+
+def build_week_from_ledger(effective_daily):
+    """
+    בניית גשם היום / השבוע / הגרף מתוך אותו יומן יומי של העונה.
+
+    כך כל המספרים באתר נספרים באותה שיטה בדיוק (raw timestamps + שעון ישראל)
+    ולא מעורבבים עם הצבירות של FieldClimate שמתאפסות לפי שעון אחר.
+    """
+    today = israel_now().date()
+    days = []
+    for back in range(6, -1, -1):
+        date_str = (today - timedelta(days=back)).strftime('%Y-%m-%d')
+        days.append((date_str, round(effective_daily.get(date_str, 0), 1)))
+
+    rain_today = days[-1][1]
+    rain_week = round(sum(mm for _, mm in days), 1)
+    return days, rain_today, rain_week
 
 def extract_weather_data():
     """שליפה ועיבוד נתוני מזג אויר"""
@@ -237,9 +274,12 @@ def extract_weather_data():
         if 'last' in values and values['last']:
             wind_direction = degrees_to_direction(values['last'][-1])
 
-    # גשם היום (לתצוגה בלבד — מ-meta כרגיל)
-    rain_today_display = meta.get('rainCurrentDay', {}).get('sum', 0)
-    rain_7d = meta.get('rain7d', {}).get('sum', 0)
+    # צבירות של FieldClimate — לא לתצוגה, רק להשוואה/דיאגנוסטיקה.
+    # הן מתאפסות לפי שעון התחנה ולכן עלולות לספור את אותו גשם אחרת מהיומן שלנו.
+    station_day = meta.get('rainCurrentDay', {})
+    station_7d = meta.get('rain7d', {})
+    station_today = station_day.get('sum', 0) if isinstance(station_day, dict) else station_day
+    station_week = station_7d.get('sum', 0) if isinstance(station_7d, dict) else station_7d
 
     # גשם בשעה האחרונה
     rain_last_hour = 0
@@ -251,7 +291,19 @@ def extract_weather_data():
 
     # חישוב גשם יומי מ-raw timestamps → עדכון צבירה עונתית
     raw_daily = calc_rain_from_raw(dates, rain_sensor)
-    season_total = update_seasonal_rain(raw_daily)
+    season_total, effective_daily = update_seasonal_rain(raw_daily)
+
+    # היום / השבוע / הגרף — מאותו יומן שממנו מחושבת העונה
+    week_days, rain_today, rain_week = build_week_from_ledger(effective_daily)
+
+    if round(station_today or 0, 1) != rain_today or round(station_week or 0, 1) != rain_week:
+        print(f"ℹ️  צבירת התחנה שונה מהיומן: "
+              f"היום {station_today} מול {rain_today}, שבוע {station_week} מול {rain_week}")
+
+    # התרעה על גשם בחודשי הקיץ — כמעט תמיד קריאת שווא (טל, חרק, תחזוקה)
+    if israel_now().month in (6, 7, 8, 9) and rain_today > 0:
+        print(f"⚠️  נרשם גשם של {rain_today} מ\"מ בעיצומו של הקיץ — "
+              f"בדוק את מד הגשם ושקול overrides ב-rain_season.json")
 
     # פאנל סולארי
     solar_raw = meta.get('solarPanel', 0)
@@ -259,8 +311,6 @@ def extract_weather_data():
 
     print(f"🌧️  גשם בשעה האחרונה: {rain_last_hour} מ\"מ")
     print(f"☀️  פאנל סולארי: {solar_panel} mV")
-
-    rain_7d_daily = get_7day_rain(meta)
 
     weather_data = {
         'last_update': datetime.utcnow().isoformat() + 'Z',
@@ -280,11 +330,16 @@ def extract_weather_data():
             'max_time': format_time(wind_max_time) if wind_max_time else None
         },
         'rain': {
-            'today': round(rain_today_display, 1),
+            'today': rain_today,
             'lastHour': round(rain_last_hour, 1),
-            'week': round(rain_7d, 1),
+            'week': rain_week,
             'season': round(season_total + PRE_STATION_RAIN, 1),
-            'daily_7d': rain_7d_daily
+            'daily_7d': [mm for _, mm in week_days],
+            'daily_7d_dates': [d for d, _ in week_days],
+            'station_report': {
+                'today': round(station_today or 0, 1),
+                'week': round(station_week or 0, 1)
+            }
         }
     }
 
@@ -301,13 +356,6 @@ def format_time(time_input):
         return datetime.fromisoformat(time_input.replace('Z', '+00:00')).strftime('%H:%M')
     except:
         return str(time_input) if time_input else None
-
-def get_7day_rain(meta):
-    rain_7d = meta.get('rain7d', {})
-    vals = rain_7d.get('vals', [0, 0, 0, 0, 0, 0, 0])
-    while len(vals) < 7:
-        vals.insert(0, 0)
-    return [round(v, 1) for v in vals[-7:]]
 
 def main():
     print("=" * 50)
