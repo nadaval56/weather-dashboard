@@ -99,6 +99,7 @@ def calc_rain_from_raw(dates, rain_sensor):
         return daily
 
     vals = rain_values[key]
+    samples = []
     for i, date in enumerate(dates):
         if date is None or i >= len(vals):
             continue
@@ -107,8 +108,14 @@ def calc_rain_from_raw(dates, rain_sensor):
             continue
         date_str = date.strftime('%Y-%m-%d')
         daily[date_str] = round(daily.get(date_str, 0) + v, 2)
+        if v > 0:
+            samples.append(f"{date.strftime('%d/%m %H:%M')}={v}")
 
     print(f"📊 גשם מ-raw לפי יום: { {k: v for k, v in daily.items() if v > 0} }")
+    # פירוט הדגימות עצמן — כדי שאפשר יהיה להבחין בדיעבד בין גשם אמיתי
+    # (מתפרס על כמה דגימות) לבין קפיצה חד-פעמית של החיישן
+    if samples:
+        print(f"🔍 דגימות raw עם גשם ({len(samples)}): {', '.join(samples)}")
     return daily
 
 def update_seasonal_rain(raw_daily):
@@ -287,7 +294,8 @@ def extract_weather_data():
         rain_values = rain_sensor['values']
         key = 'sum' if 'sum' in rain_values and rain_values['sum'] else 'raw'
         if key in rain_values and rain_values[key]:
-            rain_last_hour = sum(rain_values[key][-4:]) if len(rain_values[key]) >= 4 else 0
+            last_4 = [v for v in rain_values[key][-4:] if v is not None]
+            rain_last_hour = sum(last_4) if len(rain_values[key]) >= 4 else 0
 
     # חישוב גשם יומי מ-raw timestamps → עדכון צבירה עונתית
     raw_daily = calc_rain_from_raw(dates, rain_sensor)
