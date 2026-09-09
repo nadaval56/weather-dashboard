@@ -1,19 +1,19 @@
 {
-  "last_update": "2026-09-09T10:16:00.921781Z",
+  "last_update": "2026-09-09T14:51:52.660780Z",
   "station_name": "כוכב השחר",
-  "solarPanel": 10234,
+  "solarPanel": 10384,
   "temperature": {
-    "current": 32.2,
-    "max": 35.6,
-    "max_time": "15:00",
+    "current": 32.4,
+    "max": 33.6,
+    "max_time": "13:30",
     "min": 23.8,
     "min_time": "06:30"
   },
   "wind": {
-    "speed": 4.0,
-    "direction": "ד-מז",
-    "max": 17.3,
-    "max_time": "17:45"
+    "speed": 14.4,
+    "direction": "צפון",
+    "max": 16.6,
+    "max_time": "16:00"
   },
   "rain": {
     "today": 0,
