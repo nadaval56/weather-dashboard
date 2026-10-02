@@ -246,30 +246,54 @@
             margin-bottom: 15px;
         }
 
-        .logos {
+        /* ── עוד אתרים שלי ──────────────────────────────────────
+           הפס מאתר הגניזה (sister_sites.py + sister.js שם).
+           אזור גלילה רגיל שזז לאט כשלא נוגעים בו; ברשימה שני עותקים
+           כדי שהתנועה תהיה רציפה. במצב "בלי תנועה" ההעתק מוסתר. */
+        .sister {
             display: flex;
-            gap: 30px;
-            justify-content: center;
             align-items: center;
-            flex-wrap: wrap;
+            gap: 8px;
+            min-width: 0;
+            line-height: 1.6;
         }
-
-        .logo-link {
-            display: inline-block;
-            padding: 10px 20px;
-            background: white;
-            border-radius: 10px;
+        .sister-lbl { flex: none; font-size: .8rem; color: #718096; white-space: nowrap; }
+        .sister-view {
+            flex: 1;
+            min-width: 0;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            overscroll-behavior-x: contain;
+            -webkit-mask-image: linear-gradient(to right, transparent 0, #000 1.25rem, #000 calc(100% - 1.25rem), transparent 100%);
+                    mask-image: linear-gradient(to right, transparent 0, #000 1.25rem, #000 calc(100% - 1.25rem), transparent 100%);
+        }
+        .sister-view::-webkit-scrollbar { display: none; }
+        .sister-track { display: flex; width: max-content; }
+        .sister-set { display: flex; gap: 8px; padding-inline-end: 8px; }
+        .sister a,
+        .sister .sister-item {
+            flex: none;
+            white-space: nowrap;
+            font-size: .8rem;
+            color: #4a5568;
             text-decoration: none;
-            color: #667eea;
-            font-weight: bold;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 999px;
+            padding: 3px 12px;
+            transition: color .2s, border-color .2s;
         }
-
-        .logo-link:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+        .sister a:hover { color: #1565C0; border-color: #90CAF9; }
+        .sister .sister-item a {
+            border: 0; padding: 0; border-radius: 0; background: none;
+            font-size: inherit; color: inherit;
+            text-decoration: underline; text-underline-offset: 2px;
         }
+        .sister .sister-item a:hover { color: #1565C0; }
+        @media (prefers-reduced-motion: reduce) { .sister-clone { display: none; } }
+        @media print { .sister { display: none; } }
 
         /* Mobile Responsive */
         @media (max-width: 768px) {
@@ -300,11 +324,6 @@
 
             .wind-current {
                 flex-direction: column;
-            }
-
-            .logos {
-                flex-direction: column;
-                gap: 15px;
             }
         }
     </style>
@@ -421,14 +440,33 @@
         <!-- Footer -->
         <div class="footer">
             <p style="font-size: 1.1em; margin-bottom: 20px;">מופעל באמצעות: <strong>נדב אלשיך</strong></p>
-            <div class="logos">
-                <a href="https://banknote.co.il/" class="logo-link" target="_blank">
-                    Banknote - שטרות, מטבעות ובולים
-                </a>
-                <a href="https://holisticcenter.co.il/" class="logo-link" target="_blank">
-                    מעט צרי - רפואה משלימה
-                </a>
-            </div>
+            <nav class="sister" aria-label="האתרים הנוספים שלי">
+                <span class="sister-lbl">עוד אתרים שלי</span>
+                <div class="sister-view">
+                    <div class="sister-track">
+                    <div class="sister-set">
+                        <span class="sister-item"><span aria-hidden="true">🛠️</span> <a href="https://making-il.co.il/" rel="noopener">מייקינג</a> · יצירה טכנולוגית</span>
+                        <a href="https://banknote.co.il/" rel="noopener"><span aria-hidden="true">💶</span> Banknote · שטרות ומטבעות</a>
+                        <a href="https://geniza.co.il/" rel="noopener"><span aria-hidden="true">📜</span> הגניזה הקהירית · מסמכים מגניזת קהיר</a>
+                        <a href="https://dronexam.co.il/" rel="noopener"><span aria-hidden="true">🛩️</span> לעוף לשמיים · מבחן רת"א לרחפנים</a>
+                        <a href="https://holisticcenter.co.il/" rel="noopener"><span aria-hidden="true">🌱</span> מעט צרי · רפואה משלימה</a>
+                        <a href="https://pursue.co.il/" rel="noopener"><span aria-hidden="true">🛸</span> PURSUE · ארכיון עב"מים</a>
+                        <a href="https://quake.co.il/" rel="noopener"><span aria-hidden="true">🌍</span> רעידת אדמה · רעידות היסטוריות</a>
+                        <a href="https://heb-cal.co.il/" rel="noopener"><span aria-hidden="true">📅</span> לוח עברי</a>
+                    </div>
+                    <div class="sister-set sister-clone" aria-hidden="true">
+                        <span class="sister-item"><span aria-hidden="true">🛠️</span> <a href="https://making-il.co.il/" rel="noopener" tabindex="-1">מייקינג</a> · יצירה טכנולוגית</span>
+                        <a href="https://banknote.co.il/" rel="noopener" tabindex="-1"><span aria-hidden="true">💶</span> Banknote · שטרות ומטבעות</a>
+                        <a href="https://geniza.co.il/" rel="noopener" tabindex="-1"><span aria-hidden="true">📜</span> הגניזה הקהירית · מסמכים מגניזת קהיר</a>
+                        <a href="https://dronexam.co.il/" rel="noopener" tabindex="-1"><span aria-hidden="true">🛩️</span> לעוף לשמיים · מבחן רת"א לרחפנים</a>
+                        <a href="https://holisticcenter.co.il/" rel="noopener" tabindex="-1"><span aria-hidden="true">🌱</span> מעט צרי · רפואה משלימה</a>
+                        <a href="https://pursue.co.il/" rel="noopener" tabindex="-1"><span aria-hidden="true">🛸</span> PURSUE · ארכיון עב"מים</a>
+                        <a href="https://quake.co.il/" rel="noopener" tabindex="-1"><span aria-hidden="true">🌍</span> רעידת אדמה · רעידות היסטוריות</a>
+                        <a href="https://heb-cal.co.il/" rel="noopener" tabindex="-1"><span aria-hidden="true">📅</span> לוח עברי</a>
+                    </div>
+                    </div>
+                </div>
+            </nav>
         </div>
     </div>
 
@@ -601,6 +639,78 @@
         
         // רענון כל 30 דקות
         setInterval(loadWeatherData, 30 * 60 * 1000);
+    </script>
+    <script>
+/* ================= פס האתרים הנוספים =================
+   (מקור: geniza-explorer/assets/sister.js)
+   הפס הוא אזור גלילה רגיל: אפשר להחליק אותו באצבע או לגלול בעכבר.
+   הקוד כאן רק מזיז אותו לאט כשאף אחד לא נוגע בו, ועוצר:
+     - כל עוד אצבע, עכבר או מיקוד מקלדת נמצאים עליו (WCAG 2.2.2);
+     - לעוד כמה שניות אחרי שהמשתמש הפסיק, כדי שהתנועה לא "תחטוף" את
+       הגלילה שלו (כולל תנופת הגלילה שנמשכת אחרי הרמת האצבע);
+     - כשהפס לא נראה במסך.
+   ברשימה שני עותקים (השני מוסתר מקורא המסך ומהמקלדת). כשהגלילה מגיעה
+   לקצה של עותק אחד היא קופצת ברוחב עותק שלם, לאותה נקודה בדיוק במראה,
+   ולכן הלולאה רציפה לשני הכיוונים.
+   במצב "בלי תנועה" (הגדרת המערכת) אין תנועה אוטומטית
+   וההעתק מוסתר ב-CSS; נשאר פס רגיל שגוללים ביד. */
+(function () {
+  var view = document.querySelector('.sister-view');
+  if (!view) return;
+  var sets = view.querySelectorAll('.sister-set');
+  if (sets.length < 2) return;
+
+  var SPEED = 18;          /* פיקסלים לשנייה */
+  var RESUME_MS = 2500;    /* המתנה אחרי מגע לפני שהתנועה חוזרת */
+  var reduce = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  var holds = 0, resumeAt = 0, visible = true, pos = null, last = 0;
+
+  function still() {
+    return reduce && reduce.matches;
+  }
+  /* ב-RTL scrollLeft הוא 0 בקצה הימני ושלילי לכיוון שמאל (בכל הדפדפנים
+     המודרניים). התנועה היא ימינה, כלומר חשיפת פריטים משמאל: scrollLeft יורד. */
+  function setW() { return Math.abs(sets[0].offsetLeft - sets[1].offsetLeft); }
+  function wrap(x) {
+    var w = setW(), max = view.scrollWidth - view.clientWidth;
+    if (!w || w >= max) return x;
+    if (x > -1) x -= w;                 /* קרוב לקצה הימני: אותה נקודה בעותק השני */
+    if (x < -(max - 1)) x += w;         /* קרוב לקצה השמאלי: חזרה לעותק הראשון */
+    return x;
+  }
+  function hold() { holds++; }
+  function release() { holds = Math.max(0, holds - 1); resumeAt = performance.now() + RESUME_MS; pos = null; }
+
+  function tick(t) {
+    var dt = last ? Math.min(t - last, 100) : 0;
+    last = t;
+    if (!still() && visible && !holds && t >= resumeAt) {
+      if (pos === null) pos = wrap(view.scrollLeft);
+      pos = wrap(pos - SPEED * dt / 1000);
+      view.scrollLeft = pos;
+    } else if (!holds && t < resumeAt) {
+      /* בזמן ההמתנה: שומרים על הלולאה גם כשהמשתמש גלל עד הקצה ביד */
+      var w = wrap(view.scrollLeft);
+      if (w !== view.scrollLeft) view.scrollLeft = w;
+    }
+    requestAnimationFrame(tick);
+  }
+
+  /* מגע ועכבר: עוצרים בזמן הנגיעה, וממשיכים כמה שניות אחרי */
+  view.addEventListener('touchstart', hold, { passive: true });
+  view.addEventListener('touchend', release, { passive: true });
+  view.addEventListener('touchcancel', release, { passive: true });
+  view.addEventListener('mouseenter', hold);
+  view.addEventListener('mouseleave', release);
+  view.addEventListener('focusin', hold);
+  view.addEventListener('focusout', release);
+  view.addEventListener('wheel', function () { resumeAt = performance.now() + RESUME_MS; pos = null; }, { passive: true });
+
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (e) { visible = e[0].isIntersecting; }).observe(view);
+  }
+  requestAnimationFrame(tick);
+})();
     </script>
 </body>
 </html>
