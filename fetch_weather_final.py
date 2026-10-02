@@ -22,8 +22,12 @@ if not PUBLIC_KEY or not PRIVATE_KEY:
 
 API_BASE = "https://api.fieldclimate.com/v2"
 
-# גשם שנרשם לפני הקמת התחנה
+# גשם שנרשם לפני הקמת התחנה — שייך לעונת 2025-2026 בלבד
 PRE_STATION_RAIN = 25.0
+PRE_STATION_SEASON = "2025-10-01"
+
+# חודש תחילת עונת הגשמים — גשמי ספטמבר הם כבר תחילת החורף
+SEASON_START_MONTH = 9
 
 # שעון ישראל — אוטומטי, כולל שעון קיץ/חורף
 ISRAEL_TZ = ZoneInfo("Asia/Jerusalem")
@@ -33,6 +37,11 @@ def israel_now():
 
 def israel_today():
     return israel_now().strftime('%Y-%m-%d')
+
+def current_season_start():
+    now = israel_now()
+    year = now.year if now.month >= SEASON_START_MONTH else now.year - 1
+    return f"{year}-{SEASON_START_MONTH:02d}-01"
 
 def make_request(path):
     """שליחת בקשה ל-API עם אימות HMAC"""
@@ -67,7 +76,7 @@ def load_season_data():
     except FileNotFoundError:
         print("📝 יצירת קובץ עונתי ראשוני...")
         return {
-            "season_start": "2025-10-01",
+            "season_start": current_season_start(),
             "legacy_season_rain": 0.0,
             "overrides": {},
             "daily_rain": {}
@@ -139,8 +148,7 @@ def update_seasonal_rain(raw_daily):
     season_data = load_season_data()
 
     # בדיקת תחילת עונה חדשה
-    now = israel_now()
-    season_start_str = f"{now.year if now.month >= 10 else now.year - 1}-10-01"
+    season_start_str = current_season_start()
     if season_data.get('season_start') != season_start_str:
         print(f"🌱 עונה חדשה: {season_start_str}")
         season_data = {
@@ -188,9 +196,10 @@ def update_seasonal_rain(raw_daily):
         effective[date_str] = fixed_val
 
     legacy = season_data.get('legacy_season_rain', 0)
+    pre_station = PRE_STATION_RAIN if season_start_str == PRE_STATION_SEASON else 0
     daily_sum = round(sum(effective.values()), 1)
-    total = round(legacy + daily_sum, 1)
-    print(f"☔ עונתי: legacy={legacy} + daily={daily_sum} = {total} מ\"מ")
+    total = round(pre_station + legacy + daily_sum, 1)
+    print(f"☔ עונתי: טרום-תחנה={pre_station} + legacy={legacy} + daily={daily_sum} = {total} מ\"מ")
     return total, effective
 
 
@@ -316,7 +325,7 @@ def extract_weather_data():
               f"היום {station_today} מול {rain_today}, שבוע {station_week} מול {rain_week}")
 
     # התרעה על גשם בחודשי הקיץ — כמעט תמיד קריאת שווא (טל, חרק, תחזוקה)
-    if israel_now().month in (6, 7, 8, 9) and rain_today > 0:
+    if israel_now().month in (6, 7, 8) and rain_today > 0:
         print(f"⚠️  נרשם גשם של {rain_today} מ\"מ בעיצומו של הקיץ — "
               f"בדוק את מד הגשם ושקול overrides ב-rain_season.json")
 
@@ -348,7 +357,7 @@ def extract_weather_data():
             'today': rain_today,
             'lastHour': round(rain_last_hour, 1),
             'week': rain_week,
-            'season': round(season_total + PRE_STATION_RAIN, 1),
+            'season': season_total,
             'daily_7d': [mm for _, mm in week_days],
             'daily_7d_dates': [d for d, _ in week_days],
             'station_report': {
@@ -398,7 +407,7 @@ def main():
     print(f"   ☀️  פאנל סולארי: {weather_data['solarPanel']} mV")
     print(f"   🌧️  גשם היום: {weather_data['rain']['today']} מ\"מ")
     print(f"   📅 גשם שבועי: {weather_data['rain']['week']} מ\"מ")
-    print(f"   ☔ גשם עונתי: {weather_data['rain']['season']} מ\"מ (כולל {PRE_STATION_RAIN} מ\"מ טרום-תחנה)")
+    print(f"   ☔ גשם עונתי: {weather_data['rain']['season']} מ\"מ (מאז {current_season_start()})")
 
 if __name__ == "__main__":
     main()
