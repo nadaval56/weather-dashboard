@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<!-- תבנית תמונת השיתוף (assets/og-image.jpg), 1200×630.
+     התמונה קבועה ולא מציגה נתונים: ווטסאפ ופייסבוק שומרים אותה במטמון,
+     וטמפרטורה בתמונה הייתה מתיישנת תוך שעה.
+     לבנייה מחדש: לצלם את הדף ברוחב 1200 ובגובה 630 ולשמור כ-JPEG
+     (מתחת ל-300KB, הסף של ווטסאפ לתצוגה הגדולה). -->
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    font-family: -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(135deg, #4A5568 0%, #2D3748 100%);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    direction: rtl;
+  }
+  .card {
+    width: 1080px; height: 510px;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+    border-radius: 36px;
+    box-shadow: 0 24px 70px rgba(0,0,0,.35);
+    display: flex; align-items: center; gap: 56px;
+    padding: 0 80px;
+    color: #333;
+  }
+  .icon { font-size: 230px; line-height: 1; flex: none; }
+  .txt { flex: 1; }
+  h1 { font-size: 92px; line-height: 1.05; font-weight: 800; color: #2D3748; }
+  h1 span { display: block; color: #1565C0; }
+  p { margin-top: 26px; font-size: 38px; line-height: 1.35; color: #4a5568; }
+  .pills { margin-top: 30px; display: flex; gap: 14px; }
+  .pills b {
+    font-size: 30px; font-weight: 600; color: #0d47a1;
+    background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+    border: 2px solid #2196F3; border-radius: 999px; padding: 6px 22px;
+    white-space: nowrap; flex: none;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon">🌤️</div>
+    <div class="txt">
+      <h1>מזג אויר<span>כוכב השחר</span></h1>
+      <p>נתונים מתחנת המזג אויר של היישוב, מתעדכן כל שעה</p>
+      <div class="pills"><b>🌡️ טמפרטורה</b><b>💨 רוח</b><b>🌧️ משקעים</b></div>
+    </div>
+  </div>
+</body>
+</html>

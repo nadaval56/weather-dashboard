@@ -56,7 +56,9 @@ weather-dashboard/
 │   ├── a11y.css / a11y.js        # תפריט הנגישות ומצבי התצוגה (מ-geniza-explorer)
 │   ├── privacy.js                # הודעת הפרטיות ופקדי הנתונים (מ-geniza-explorer)
 │   ├── legal.css                 # עיצוב שני המסמכים
-│   └── sister.js                 # התנועה של פס "עוד אתרים שלי"
+│   ├── sister.js                 # התנועה של פס "עוד אתרים שלי"
+│   └── og-image.jpg              # תמונת השיתוף (ווטסאפ וכו'), נבנית מ-tools/og-image.html
+├── tools/og-image.html           # תבנית תמונת השיתוף: צילום ב-1200×630, JPEG
 └── .github/
     └── workflows/
         └── update-weather.yml    # GitHub Actions
