@@ -1,10 +1,10 @@
 name: Update Weather Data
 
 on:
-  schedule:
-    # רץ כל שעה (48 בקשות/יום = הגבול של Tier 1)
-    - cron: '0 * * * *'
-  workflow_dispatch:  # מאפשר הרצה ידנית
+  # ההפעלה השעתית מגיעה מ-cron-job.org (משימה "weather-dashboard", בדקה 7 של כל שעה)
+  # דרך workflow_dispatch. ה-cron של GitHub הוסר כי הוא דילג על כ-3/4 מהריצות.
+  # לא להחזיר schedule במקביל: כל ריצה = 2 בקשות API, והמכסה היא 48 ביום.
+  workflow_dispatch:
 
 permissions:
   contents: write
