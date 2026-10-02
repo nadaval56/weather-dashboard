@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מדיניות פרטיות — מזג אויר, כוכב השחר</title>
+    <meta name="description" content="מדיניות הפרטיות של דשבורד מזג האוויר בכוכב השחר: מה נשמר במכשיר שלך, מי עוד מעורב, ואיך למחוק הכול.">
+    <link rel="canonical" href="https://nadaval56.github.io/weather-dashboard/privacy/">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌤️</text></svg>">
+    <link rel="stylesheet" href="../assets/theme.css">
+    <link rel="stylesheet" href="../assets/legal.css">
+    <link rel="stylesheet" href="../assets/a11y.css">
+    <script>
+      /* העדפות הנגישות מוחלות לפני הציור הראשון, כדי שמי שבחר ניגודיות גבוהה
+         לא יראה את הדף נטען בצבעים הרגילים ואז מתחלף. מי שביקש "בלי שמירה
+         מקומית" לא מקבל קריאה של שום דבר. */
+      try {
+        var _p = localStorage.getItem('privacy:v1');
+        if (!_p || JSON.parse(_p).local !== false) {
+          var _r = document.documentElement, _a = localStorage.getItem('a11y:v1');
+          if (_a) {
+            _a = JSON.parse(_a);
+            if (_a.fs) _r.setAttribute('data-fs', _a.fs);
+            if (_a.mode) _r.classList.add('a11y-' + _a.mode);
+            ['links', 'readable', 'spacing', 'still', 'cursor', 'focus']
+              .forEach(function (k) { if (_a[k]) _r.classList.add('a11y-' + k); });
+          }
+        }
+      } catch (e) { /* מצב פרטי, או אחסון חסום — הדף פשוט נטען כרגיל */ }
+    </script>
+</head>
+<body>
+    <a class="skip-link" href="#legal-main">דלג לתוכן</a>
+    <div class="container">
+        <header class="header header--slim">
+            <a class="site-name" href="../">🌡️ מזג אויר - כוכב השחר</a>
+            <div class="crumb">מדיניות פרטיות</div>
+        </header>
+
+        <main class="legal-article" id="legal-main" tabindex="-1">
+            <h1>מדיניות פרטיות</h1>
+            <p class="lede">
+                הדשבורד הזה לא אוסף עליך מידע, אין בו עוגיות ואין בו כלי מדידה. מה שכן נשמר
+                נשמר במכשיר שלך בלבד, ואפשר לראות אותו, לייצא אותו ולמחוק אותו מהדף הזה,
+                עכשיו. גורם חיצוני אחד כן מעורב בטעינת הדף, שירות העננות Open-Meteo,
+                והוא מפורט בסעיף 6.
+            </p>
+
+            <section class="legal-sec" aria-labelledby="s1">
+                <h2 id="s1">1. מי מפעיל את האתר</h2>
+                <div class="contact">
+                    <p><b>מפעיל האתר:</b> נדב אלשיך</p>
+                    <p><b>דואר אלקטרוני:</b> <a href="mailto:nadaval56@gmail.com?subject=%D7%A4%D7%A8%D7%98%D7%99%D7%95%D7%AA%20%E2%80%94%20%D7%93%D7%A9%D7%91%D7%95%D7%A8%D7%93%20%D7%9E%D7%96%D7%92%20%D7%94%D7%90%D7%95%D7%95%D7%99%D7%A8%2C%20%D7%9B%D7%95%D7%9B%D7%91%20%D7%94%D7%A9%D7%97%D7%A8">nadaval56@gmail.com</a></p>
+                    <p><b>כתובת האתר:</b> <a href="https://nadaval56.github.io/weather-dashboard/">nadaval56.github.io/weather-dashboard</a></p>
+                </div>
+                <p>
+                    האתר הוא פרויקט אישי, חינמי ולא-מסחרי, שמציג את נתוני תחנת מזג האוויר
+                    בכוכב השחר: טמפרטורה, רוח ומשקעים. אין מאחוריו חברה, אין בו פרסומות ואין בו מכירה.
+                </p>
+                <p>
+                    המדיניות נכתבה כדי לקיים את חובת היידוע שבסעיף 11 לחוק הגנת הפרטיות,
+                    התשמ"א-1981, בנוסחו לאחר תיקון מס' 13 (התשפ"ה-2024), שנכנס לתוקף
+                    ב-14 באוגוסט 2025.
+                </p>
+            </section>
+
+            <section class="legal-sec" aria-labelledby="s2">
+                <h2 id="s2">2. מה האתר לא עושה</h2>
+                <p>זו רשימה שלמה ולא חלקית, וכל פריט בה נבדק בקוד של האתר.</p>
+                <ul>
+                    <li>אינו מבקש ואינו קולט שם, כתובת, טלפון, דואר אלקטרוני או כל פרט מזהה.</li>
+                    <li>אין הרשמה, התחברות או חשבון משתמש.</li>
+                    <li>אין טופס יצירת קשר, ניוזלטר או רשימת תפוצה.</li>
+                    <li>אין כלי מדידה: לא Google Analytics, לא Tag Manager, לא Meta Pixel,
+                        לא Hotjar ולא כל חלופה אחרת.</li>
+                    <li>אין פרסומות, רשתות פרסום או מעקב שיווקי, ואין מכירת מידע או העברתו
+                        לצד שלישי.</li>
+                    <li>אין עוגיות. אף לא אחת, גם לא "הכרחיות".</li>
+                    <li>אין iframe, אין כפתורי שיתוף של רשתות חברתיות ואין תוסף נגישות
+                        מסחרי. תפריט הנגישות נכתב באתר עצמו ורץ ממנו.</li>
+                    <li>אין גופנים או ספריות שנטענים מ-Google Fonts או מ-CDN חיצוני. האתר
+                        משתמש בגופני המערכת של המכשיר שלך.</li>
+                    <li>אינו מבקש הרשאות למיקום, מצלמה, מיקרופון או התראות. המיקום שבו
+                        משתמש האתר הוא המיקום הקבוע של התחנה, לא שלך.</li>
+                </ul>
+            </section>
+
+            <section class="legal-sec" aria-labelledby="s3">
+                <h2 id="s3">3. מה כן נשמר, ואיפה</h2>
+                <p>
+                    אחסון מקומי אינו עוגייה. הוא אינו נשלח לשרת בכל בקשה, אינו נגיש
+                    לאתרים אחרים, ונשאר על המכשיר שלך. אף אחד, כולל מפעיל האתר, לא יכול
+                    לקרוא אותו מרחוק.
+                </p>
+                <div class="tbl-scroll" role="region" aria-label="טבלת הנתונים השמורים" tabindex="0">
+                    <table class="legal-tbl">
+                        <caption>כל מה שהאתר שומר במכשיר שלך: שני מפתחות, וזה הכול</caption>
+                        <thead><tr><th scope="col">מפתח</th><th scope="col">מה נשמר בו</th><th scope="col">למה</th><th scope="col">משך</th></tr></thead>
+                        <tbody>
+                            <tr><td><span class="mono">a11y:v1</span></td>
+                                <td>הבחירות שלך בתפריט הנגישות: גודל טקסט, מצב תצוגה והמתגים</td>
+                                <td>שההתאמות יחולו בכל דף ובכל ביקור, בלי לבחור מחדש</td>
+                                <td>עד שתמחק</td></tr>
+                            <tr><td><span class="mono">privacy:v1</span></td>
+                                <td>שראית את הודעת הפרטיות, ומה בחרת בה</td>
+                                <td>שההודעה לא תחזור, ושאפשר יהיה לכבד את הבחירה בביקור הבא</td>
+                                <td>עד שתמחק</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3>המפתח שנשאר גם אם ביקשת לא לשמור</h3>
+                <p>
+                    אם תבחר "בלי שמירה מקומית", האתר ימחק את <span class="mono">a11y:v1</span> וישמור
+                    רק את <span class="mono">privacy:v1</span>. בלעדיו האתר לא יזכור בביקור הבא
+                    שביקשת לא לשמור, ויתחיל לשמור מחדש. זה המינימום ההכרחי כדי לכבד את
+                    הבחירה שלך, וזה כל תפקידו.
+                </p>
+            </section>
+
+            <section class="legal-sec" aria-labelledby="s4">
+                <h2 id="s4">4. הנתונים שלך: עיון, ייצוא ומחיקה</h2>
+                <p>אלה אינם קישורים לטופס. אלה פקדים שפועלים כאן ועכשיו, על המכשיר שלך.</p>
+                <div class="datactl">
+                    <p class="st" id="dv-state">בודק…</p>
+                    <div class="btn-row">
+                        <button type="button" id="dv-show">הצג מה שמור עליי</button>
+                        <button type="button" id="dv-export">ייצוא לקובץ</button>
+                        <button type="button" id="dv-wipe">מחיקת הכול</button>
+                        <button type="button" id="dv-toggle">טוען…</button>
+                        <button type="button" id="dv-again">הצג מחדש את ההודעה</button>
+                    </div>
+                    <div id="dv-out" role="status" aria-live="polite"></div>
+                </div>
+                <noscript><p class="legal-note">הפקדים דורשים JavaScript. אפשר גם ידנית: הגדרות הדפדפן ←
+                    נתוני אתרים ← מחיקה עבור nadaval56.github.io.</p></noscript>
+            </section>
+
+            <section class="legal-sec" aria-labelledby="s5">
+                <h2 id="s5">5. עוגיות</h2>
+                <p>
+                    האתר אינו עושה שימוש בעוגיות כלל. ההודעה שמופיעה בכניסה הראשונה
+                    אינה "באנר עוגיות" ואינה מבקשת הסכמה לאיסוף, כי אין איסוף. היא הודעה
+                    שקופה על מה שנשמר במכשיר שלך ועל מה שנטען מבחוץ, ואפשרות לוותר גם על
+                    השמירה המקומית. האתר ממשיך לעבוד במלואו אחרי הוויתור; רק העדפות
+                    התצוגה לא ייזכרו בין ביקורים.
+                </p>
+            </section>
+
+            <section class="legal-sec" aria-labelledby="s6">
+                <h2 id="s6">6. גורמים חיצוניים שמעורבים בכל זאת</h2>
+                <p>הנה בדיוק מי מעורב, מתי, ומה הוא רואה.</p>
+
+                <h3>אחסון האתר: GitHub Pages</h3>
+                <p>
+                    כמו כל שרת אינטרנט, השרת שמגיש את הדפים רושם ביומני שרת טכניים את
+                    כתובת ה-IP של הפונה, את זהות הדפדפן ואת הקובץ שהתבקש. זה חלק
+                    מהאופן שבו האינטרנט עובד. היומנים הם של GitHub; מפעיל האתר אינו רואה
+                    אותם ואינו יכול לשלוף מהם דבר. השימוש בהם כפוף
+                    <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">להצהרת הפרטיות של GitHub</a>.
+                </p>
+
+                <h3>נתון העננות: Open-Meteo</h3>
+                <p>
+                    הסמל הגדול בראש הדף (שמש, ענן או מופע הירח) נקבע לפי העננות הנוכחית,
+                    שהדפדפן שלך מבקש ישירות מ-<span class="mono">api.open-meteo.com</span>:
+                    בטעינת הדף, ושוב כל 10 דקות כל עוד הדף פתוח. הבקשה כוללת רק את
+                    הקואורדינטות הקבועות של התחנה בכוכב השחר, לא את המיקום שלך. כמו כל
+                    בקשה ברשת, כתובת ה-IP שלך ופרטי הדפדפן מגיעים אליהם, בכפוף
+                    <a href="https://open-meteo.com/en/terms#privacy">לתנאים ולמדיניות הפרטיות של Open-Meteo</a>.
+                    אם הבקשה נחסמת או נכשלת, הדף ממשיך לעבוד, ורק הסמל מוצג בלי עננים.
+                </p>
+
+                <h3>נתוני התחנה: FieldClimate</h3>
+                <p>
+                    הדפדפן שלך אינו פונה ל-FieldClimate בכלל. פעם בשעה תהליך אוטומטי ב-GitHub
+                    (שמופעל דרך השירות cron-job.org) מושך את הנתונים מהתחנה ושומר אותם
+                    בקובץ באתר עצמו, והדף קורא את הקובץ הזה. הקובץ מכיל נתוני מזג אוויר
+                    בלבד, ולא שום דבר עליך.
+                </p>
+
+                <h3>קישורים יוצאים</h3>
+                <p>
+                    בתחתית הדף יש קישורים לאתרים אחרים שלי, ובדפים האלה יש קישורים למקורות
+                    חיצוניים. ברגע שלוחצים על קישור חיצוני עוזבים את האתר, והמדיניות של
+                    האתר שאליו הגעת היא זו שחלה.
+                </p>
+                <p class="legal-note">
+                    איך לוודא את כל זה בעצמך: פתח את לשונית
+                    <b>Network</b> בכלי הפיתוח של הדפדפן וטען מחדש את
+                    הדף. בדפים האלה כל הבקשות פונות ל-<span class="mono">nadaval56.github.io</span> בלבד.
+                    בדשבורד עצמו תתווסף בקשה אחת ל-<span class="mono">api.open-meteo.com</span>. שום דבר אחר.
+                </p>
+            </section>
+
+            <section class="legal-sec" aria-labelledby="s7">
+                <h2 id="s7">7. אבטחת מידע</h2>
+                <p>
+                    תקנות הגנת הפרטיות (אבטחת מידע), התשע"ז-2017, מסדירות אבטחת מאגרי
+                    מידע. האתר אינו מנהל מאגר מידע על אנשים. אין שרת שאוסף, אין מסד נתונים
+                    ואין צד שרת שפונה אליו גולש, רק קבצים סטטיים. כל התעבורה מוצפנת
+                    ב-HTTPS, ומה שנשמר במכשיר מוגן במדיניות Same-Origin של הדפדפן.
+                </p>
+            </section>
+
+            <section class="legal-sec" aria-labelledby="s8">
+                <h2 id="s8">8. הזכויות שלך</h2>
+                <ul>
+                    <li><b>זכות עיון</b> (סעיף 13): לדעת איזה מידע מוחזק עליך.</li>
+                    <li><b>זכות לתיקון</b> (סעיף 14): לתקן מידע שאינו נכון, שלם, ברור או מעודכן.</li>
+                    <li><b>זכות למחיקה</b>, בנסיבות שהחוק קובע.</li>
+                </ul>
+                <p>
+                    ביחס לאתר הזה יש לזכויות האלה תשובה פשוטה: אין מאגר שאפשר לעיין בו,
+                    מפני שלא נאסף עליך דבר. כל מה שקיים נמצא במכשיר שלך, ואת הזכויות
+                    אתה מממש בעצמך ומיידית, בפקדים שבסעיף 4.
+                </p>
+                <p>
+                    שאלה או טענה: <a href="mailto:nadaval56@gmail.com?subject=%D7%A4%D7%A8%D7%98%D7%99%D7%95%D7%AA%20%E2%80%94%20%D7%93%D7%A9%D7%91%D7%95%D7%A8%D7%93%20%D7%9E%D7%96%D7%92%20%D7%94%D7%90%D7%95%D7%95%D7%99%D7%A8%2C%20%D7%9B%D7%95%D7%9B%D7%91%20%D7%94%D7%A9%D7%97%D7%A8">nadaval56@gmail.com</a>.
+                    אם התשובה אינה מספקת, אפשר להגיש תלונה
+                    <a href="https://www.gov.il/he/departments/the_privacy_protection_authority">לרשות להגנת הפרטיות</a>.
+                </p>
+            </section>
+
+            <section class="legal-sec" aria-labelledby="s9">
+                <h2 id="s9">9. קטינים</h2>
+                <p>מאחר שהאתר אינו אוסף מידע מאף אחד, הוא אינו אוסף מידע גם מקטינים.</p>
+            </section>
+
+            <section class="legal-sec" aria-labelledby="s10">
+                <h2 id="s10">10. שינויים במדיניות</h2>
+                <p>
+                    אם האתר ישתנה באופן שמשנה את תמונת הפרטיות, למשל אם יתווסף כלי מדידה
+                    או שירות חיצוני נוסף, המדיניות תעודכן לפני השינוי, ההודעה תוצג
+                    מחדש, ותאריך העדכון שלמטה ישתנה.
+                </p>
+            </section>
+
+            <nav class="siblings" aria-labelledby="sib">
+                <h2 id="sib">מסמכים נוספים</h2>
+                <ul>
+                    <li><a href="../accessibility/">הצהרת נגישות</a><span>תקנה 35 · ת"י 5568 · רמה AA</span></li>
+                    <li><a href="../">חזרה לדשבורד</a><span>טמפרטורה, רוח ומשקעים בכוכב השחר</span></li>
+                </ul>
+            </nav>
+
+            <p class="legal-note">
+                אינו ייעוץ משפטי. המסמך מתאר את מה שהאתר עושה ואינו עושה. הוא נכתב
+                לפי חוק הגנת הפרטיות, התשמ"א-1981, לרבות תיקון מס' 13, אך אינו מהווה
+                חוות דעת משפטית ואינו מחליף את לשון החוק.
+            </p>
+            <p class="updated">עודכן לאחרונה: 2 באוקטובר 2026</p>
+        </main>
+
+        <footer class="footer">
+            <p class="footer-links"><a href="../">חזרה לדשבורד</a> · <a href="../privacy/">מדיניות פרטיות</a> · <a href="../accessibility/">הצהרת נגישות</a></p>
+            <nav class="sister" aria-label="האתרים הנוספים שלי">
+                <span class="sister-lbl">עוד אתרים שלי</span>
+                <div class="sister-view">
+                    <div class="sister-track">
+                    <div class="sister-set">
+                        <a href="https://making-il.co.il/" rel="noopener"><span aria-hidden="true">🛠️</span> מייקינג · יצירה טכנולוגית</a>
+                        <a href="https://banknote.co.il/" rel="noopener"><span aria-hidden="true">💶</span> Banknote · שטרות ומטבעות</a>
+                        <a href="https://geniza.co.il/" rel="noopener"><span aria-hidden="true">📜</span> הגניזה הקהירית · מסמכים מגניזת קהיר</a>
+                        <a href="https://dronexam.co.il/" rel="noopener"><span aria-hidden="true">🛩️</span> לעוף לשמיים · מבחן רת"א לרחפנים</a>
+                        <a href="https://holisticcenter.co.il/" rel="noopener"><span aria-hidden="true">🌱</span> מעט צרי · רפואה משלימה</a>
+                        <a href="https://pursue.co.il/" rel="noopener"><span aria-hidden="true">🛸</span> PURSUE · ארכיון עב"מים</a>
+                        <a href="https://quake.co.il/" rel="noopener"><span aria-hidden="true">🌍</span> רעידת אדמה · רעידות היסטוריות</a>
+                        <a href="https://heb-cal.co.il/" rel="noopener"><span aria-hidden="true">📅</span> לוח עברי</a>
+                    </div>
+                    <div class="sister-set sister-clone" aria-hidden="true">
+                        <a href="https://making-il.co.il/" rel="noopener" tabindex="-1"><span aria-hidden="true">🛠️</span> מייקינג · יצירה טכנולוגית</a>
+                        <a href="https://banknote.co.il/" rel="noopener" tabindex="-1"><span aria-hidden="true">💶</span> Banknote · שטרות ומטבעות</a>
+                        <a href="https://geniza.co.il/" rel="noopener" tabindex="-1"><span aria-hidden="true">📜</span> הגניזה הקהירית · מסמכים מגניזת קהיר</a>
+                        <a href="https://dronexam.co.il/" rel="noopener" tabindex="-1"><span aria-hidden="true">🛩️</span> לעוף לשמיים · מבחן רת"א לרחפנים</a>
+                        <a href="https://holisticcenter.co.il/" rel="noopener" tabindex="-1"><span aria-hidden="true">🌱</span> מעט צרי · רפואה משלימה</a>
+                        <a href="https://pursue.co.il/" rel="noopener" tabindex="-1"><span aria-hidden="true">🛸</span> PURSUE · ארכיון עב"מים</a>
+                        <a href="https://quake.co.il/" rel="noopener" tabindex="-1"><span aria-hidden="true">🌍</span> רעידת אדמה · רעידות היסטוריות</a>
+                        <a href="https://heb-cal.co.il/" rel="noopener" tabindex="-1"><span aria-hidden="true">📅</span> לוח עברי</a>
+                    </div>
+                    </div>
+                </div>
+            </nav>
+        </footer>
+    </div>
+
+    <script src="../assets/sister.js" defer></script>
+    <script>
+      window.PRIVACY_CONFIG = { appPrefixes: ['a11y:'], privacyUrl: '../privacy/' };
+      window.A11Y_CONFIG = { privacyUrl: '../privacy/', accessibilityUrl: '../accessibility/' };
+    </script>
+    <script src="../assets/privacy.js"></script>
+    <script src="../assets/a11y.js"></script>
+  <script>
+  /* פקדי הנתונים. הכול קורה בדפדפן — אין כאן שום קריאת רשת. */
+  (function () {
+    var out = document.getElementById('dv-out'),
+        st  = document.getElementById('dv-state'),
+        tg  = document.getElementById('dv-toggle');
+
+    function items(n) { return n === 0 ? 'שום פריט' : n === 1 ? 'פריט אחד' : n + ' פריטים'; }
+    function esc(s) {
+      return String(s).replace(/[&<>]/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c];
+      });
+    }
+
+    function refresh() {
+      var rows = PRIVACY.inventory(), allowed = PRIVACY.storageAllowed();
+      var bytes = rows.reduce(function (a, r) { return a + r.size; }, 0);
+      st.innerHTML = allowed
+        ? (rows.length
+            ? 'שמירה מקומית: <b>פעילה</b>. במכשיר הזה שמור כרגע <b>' + items(rows.length) +
+              '</b>, בגודל כולל של <b>' + bytes + '</b> תווים.'
+            : 'שמירה מקומית: <b>פעילה</b>, אבל עדיין לא נשמר במכשיר הזה דבר.')
+        : 'שמירה מקומית: <b>מבוטלת</b> לפי בקשתך. נשמרת רק רשומת הבחירה עצמה.';
+      tg.textContent = allowed ? 'ביטול השמירה המקומית' : 'הפעלת השמירה המקומית';
+    }
+
+    document.getElementById('dv-show').addEventListener('click', function () {
+      var rows = PRIVACY.inventory();
+      if (!rows.length) { out.innerHTML = '<p class="dv-msg">לא שמור עליך דבר במכשיר הזה.</p>'; return; }
+      out.innerHTML = '<p class="dv-msg">זה כל מה ששמור — ' + items(rows.length) + ':</p><pre tabindex="0">' +
+        esc(rows.map(function (r) { return r.key + '\n' + r.value; }).join('\n\n')) + '</pre>';
+    });
+
+    document.getElementById('dv-export').addEventListener('click', function () {
+      var obj = {};
+      PRIVACY.inventory().forEach(function (r) { obj[r.key] = r.value; });
+      var b = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
+      var u = URL.createObjectURL(b), a = document.createElement('a');
+      a.href = u; a.download = 'weather-dashboard-local-data.json'; a.click();
+      URL.revokeObjectURL(u);
+      out.innerHTML = '<p class="dv-msg">הקובץ ירד למכשיר.</p>';
+    });
+
+    document.getElementById('dv-wipe').addEventListener('click', function () {
+      if (!confirm('למחוק את כל מה שהאתר שמר במכשיר הזה? הפעולה אינה הפיכה.')) return;
+      var n = PRIVACY.purge();
+      PRIVACY.remove(PRIVACY.KEY);
+      out.innerHTML = '<p class="dv-msg">נמחק ' + items(n + 1) + '. לא נשאר דבר.</p>';
+      refresh();
+    });
+
+    tg.addEventListener('click', function () {
+      var allowed = PRIVACY.storageAllowed();
+      if (allowed && !confirm('ביטול השמירה המקומית ימחק עכשיו את מה שנשמר. להמשיך?')) return;
+      PRIVACY.decide(!allowed);
+      out.innerHTML = '<p class="dv-msg">' +
+        (allowed ? 'השמירה בוטלה, והנתונים נמחקו.' : 'השמירה הופעלה מחדש.') + '</p>';
+      refresh();
+    });
+
+    document.getElementById('dv-again').addEventListener('click', function () {
+      PRIVACY.reopen();
+      location.reload();
+    });
+
+    /* ההחלטה בהודעה עשויה להתקבל אחרי הטעינה — אז המספרים כאן כבר לא נכונים. */
+    document.addEventListener('privacy:change', refresh);
+    refresh();
+  })();
+  </script>
+</body>
+</html>

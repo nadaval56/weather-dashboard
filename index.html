@@ -8,41 +8,28 @@
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌤️</text></svg>">
     
+    <link rel="stylesheet" href="assets/theme.css">
+    <link rel="stylesheet" href="assets/a11y.css">
+    <script>
+      /* העדפות הנגישות מוחלות לפני הציור הראשון, כדי שמי שבחר ניגודיות גבוהה
+         לא יראה את הדף נטען בצבעים הרגילים ואז מתחלף. מי שביקש "בלי שמירה
+         מקומית" לא מקבל קריאה של שום דבר. */
+      try {
+        var _p = localStorage.getItem('privacy:v1');
+        if (!_p || JSON.parse(_p).local !== false) {
+          var _r = document.documentElement, _a = localStorage.getItem('a11y:v1');
+          if (_a) {
+            _a = JSON.parse(_a);
+            if (_a.fs) _r.setAttribute('data-fs', _a.fs);
+            if (_a.mode) _r.classList.add('a11y-' + _a.mode);
+            ['links', 'readable', 'spacing', 'still', 'cursor', 'focus']
+              .forEach(function (k) { if (_a[k]) _r.classList.add('a11y-' + k); });
+          }
+        }
+      } catch (e) { /* מצב פרטי, או אחסון חסום — הדף פשוט נטען כרגיל */ }
+    </script>
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #F7FAFC 0%, #EDF2F7 100%);
-            min-height: 100vh;
-            padding: 20px;
-            direction: rtl;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #4A5568 0%, #2D3748 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 2em;
-            margin-bottom: 10px;
-        }
 
         .last-update {
             opacity: 0.9;
@@ -52,23 +39,23 @@
         .current-weather {
             text-align: center;
             padding: 40px 20px;
-            background: linear-gradient(to bottom, #f8f9ff 0%, #ffffff 100%);
+            background: linear-gradient(to bottom, var(--surface-2) 0%, var(--surface) 100%);
         }
 
         .weather-icon {
-            font-size: 80px;
+            font-size: 5rem;
             margin-bottom: 20px;
         }
 
         .current-temp {
             font-size: 4em;
             font-weight: bold;
-            color: #333;
+            color: var(--text);
             margin-bottom: 10px;
         }
 
         .temp-label {
-            color: #666;
+            color: var(--text-2);
             font-size: 1.2em;
         }
 
@@ -80,12 +67,12 @@
         }
 
         .stat-card {
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+            background: linear-gradient(135deg, var(--surface) 0%, var(--surface-2) 100%);
             padding: 25px 20px;
             border-radius: 20px;
             text-align: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(102, 126, 234, 0.1);
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--card-border);
         }
 
         .stat-icon {
@@ -96,29 +83,29 @@
         .stat-value {
             font-size: 1.8em;
             font-weight: bold;
-            color: #333;
+            color: var(--text);
             margin: 10px 0;
         }
 
         .stat-label {
-            color: #666;
+            color: var(--text-2);
             font-size: 0.9em;
         }
 
         .stat-time {
-            color: #999;
+            color: var(--text-3);
             font-size: 0.8em;
             margin-top: 5px;
         }
 
         .section {
             padding: 30px;
-            border-top: 1px solid #eee;
+            border-top: 1px solid var(--border);
         }
 
         .section-title {
             font-size: 1.5em;
-            color: #333;
+            color: var(--text);
             margin-bottom: 20px;
             display: flex;
             align-items: center;
@@ -127,11 +114,11 @@
         }
 
         .wind-section {
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+            background: linear-gradient(135deg, var(--surface) 0%, var(--surface-2) 100%);
             padding: 25px;
             border-radius: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(102, 126, 234, 0.1);
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--card-border);
         }
 
         .wind-current {
@@ -149,11 +136,11 @@
         .wind-speed {
             font-size: 2em;
             font-weight: bold;
-            color: #333;
+            color: var(--text);
         }
 
         .wind-direction {
-            color: #666;
+            color: var(--text-2);
             font-size: 1.1em;
         }
 
@@ -164,22 +151,22 @@
         }
 
         .rain-stat {
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+            background: linear-gradient(135deg, var(--surface) 0%, var(--surface-2) 100%);
             padding: 20px 15px;
             border-radius: 20px;
             text-align: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(102, 126, 234, 0.1);
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--card-border);
         }
 
         .rain-value {
             font-size: 1.8em;
             font-weight: bold;
-            color: #2196F3;
+            color: var(--accent-dark);   /* #2196F3 נתן 2.97:1 על רקע הכרטיס */
         }
 
         .rain-label {
-            color: #666;
+            color: var(--text-2);
             font-size: 0.9em;
             margin-top: 5px;
         }
@@ -187,12 +174,12 @@
         .chart-container {
             margin-top: 20px;
             height: 180px;
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+            background: linear-gradient(135deg, var(--surface) 0%, var(--surface-2) 100%);
             border-radius: 20px;
             padding: 15px 15px 35px 15px;
             position: relative;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(102, 126, 234, 0.1);
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--card-border);
         }
 
         .chart-bars {
@@ -205,7 +192,7 @@
 
         .chart-bar {
             flex: 1;
-            background: linear-gradient(to top, #2196F3, #64B5F6);
+            background: linear-gradient(to top, var(--accent), var(--accent-light));
             border-radius: 5px 5px 0 0;
             position: relative;
             transition: transform 0.2s;
@@ -222,7 +209,7 @@
             text-align: center;
             font-size: 0.8em;
             font-weight: bold;
-            color: #2196F3;
+            color: var(--accent-dark);
         }
 
         .chart-bar-label {
@@ -231,79 +218,17 @@
             width: 100%;
             text-align: center;
             font-size: 0.7em;
-            color: #666;
+            color: var(--text-2);
         }
-
-        .footer {
-            background: #f8f9ff;
-            padding: 30px;
-            text-align: center;
-            border-top: 1px solid #eee;
-        }
-
-        .footer p {
-            color: #666;
-            margin-bottom: 15px;
-        }
-
-        /* ── עוד אתרים שלי ──────────────────────────────────────
-           הפס מאתר הגניזה (sister_sites.py + sister.js שם).
-           אזור גלילה רגיל שזז לאט כשלא נוגעים בו; ברשימה שני עותקים
-           כדי שהתנועה תהיה רציפה. במצב "בלי תנועה" ההעתק מוסתר. */
-        .sister {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            min-width: 0;
-            line-height: 1.6;
-        }
-        .sister-lbl { flex: none; font-size: .8rem; color: #718096; white-space: nowrap; }
-        .sister-view {
-            flex: 1;
-            min-width: 0;
-            overflow-x: auto;
-            overflow-y: hidden;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-            overscroll-behavior-x: contain;
-            -webkit-mask-image: linear-gradient(to right, transparent 0, #000 1.25rem, #000 calc(100% - 1.25rem), transparent 100%);
-                    mask-image: linear-gradient(to right, transparent 0, #000 1.25rem, #000 calc(100% - 1.25rem), transparent 100%);
-        }
-        .sister-view::-webkit-scrollbar { display: none; }
-        .sister-track { display: flex; width: max-content; }
-        .sister-set { display: flex; gap: 8px; padding-inline-end: 8px; }
-        .sister a {
-            flex: none;
-            white-space: nowrap;
-            font-size: .8rem;
-            color: #4a5568;
-            text-decoration: none;
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 999px;
-            padding: 3px 12px;
-            transition: color .2s, border-color .2s;
-        }
-        .sister a:hover { color: #1565C0; border-color: #90CAF9; }
-        @media (prefers-reduced-motion: reduce) { .sister-clone { display: none; } }
-        @media print { .sister { display: none; } }
 
         /* Mobile Responsive */
         @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-
-            .header h1 {
-                font-size: 1.5em;
-            }
-
             .current-temp {
                 font-size: 3em;
             }
 
             .weather-icon {
-                font-size: 60px;
+                font-size: 3.75rem;
             }
 
             .stats-grid {
@@ -322,16 +247,19 @@
     </style>
 </head>
 <body>
+    <a class="skip-link" href="#main">דלג לתוכן</a>
     <div class="container">
         <!-- Header -->
-        <div class="header">
+        <header class="header">
             <h1>🌡️ מזג אויר - כוכב השחר</h1>
             <div class="last-update">טוען...</div>
-        </div>
+        </header>
+
+        <main id="main" tabindex="-1">
 
         <!-- Current Weather -->
         <div class="current-weather">
-            <div class="weather-icon">⏳</div>
+            <div class="weather-icon" role="img" aria-label="טוען">⏳</div>
             <div class="current-temp">...</div>
             <div class="temp-label">עכשיו</div>
         </div>
@@ -339,13 +267,13 @@
         <!-- Temperature Stats -->
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-icon" style="color: #f44336; font-size: 3em;">▲</div>
+                <div class="stat-icon" style="color: var(--hot); font-size: 3em;" aria-hidden="true">▲</div>
                 <div class="stat-label">מקסימום ביממה האחרונה</div>
                 <div class="stat-value">...</div>
                 <div class="stat-time">--:--</div>
             </div>
             <div class="stat-card">
-                <div class="stat-icon" style="color: #2196F3; font-size: 3em;">▼</div>
+                <div class="stat-icon" style="color: var(--accent); font-size: 3em;" aria-hidden="true">▼</div>
                 <div class="stat-label">מינימום ביממה האחרונה</div>
                 <div class="stat-value">...</div>
                 <div class="stat-time">--:--</div>
@@ -362,7 +290,7 @@
                         <div class="wind-direction">...</div>
                     </div>
                 </div>
-                <div style="text-align: center; color: #666; margin-top: 15px;">
+                <div style="text-align: center; color: var(--text-2); margin-top: 15px;">
                     <div style="margin-bottom: 5px;">רוח מקסימלית ב-24 שעות האחרונות:</div>
                     <div style="font-size: 1.3em;"><strong>...</strong> (--:--)</div>
                 </div>
@@ -374,10 +302,10 @@
             <h2 class="section-title">🌧️ משקעים</h2>
             
             <!-- Seasonal Rain - Most Important -->
-            <div style="text-align: center; margin-bottom: 30px; padding: 30px 20px; background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%); border-radius: 20px; box-shadow: 0 8px 25px rgba(33, 150, 243, 0.15); border: 2px solid #2196F3;">
-                <div style="font-size: 0.9em; color: #1976D2; margin-bottom: 10px; font-weight: bold;">מתחילת העונה</div>
-                <div class="rain-value" style="font-size: 3em; color: #1565C0; display: inline;">...</div>
-                <div style="display: inline; font-size: 1.5em; color: #1976D2; margin-right: 10px;">מ"מ</div>
+            <div style="text-align: center; margin-bottom: 30px; padding: 30px 20px; background: linear-gradient(135deg, var(--accent-soft-a) 0%, var(--accent-soft-b) 100%); border-radius: 20px; box-shadow: var(--shadow-hero); border: 2px solid var(--accent);">
+                <div style="font-size: 0.9em; color: var(--accent-deep); margin-bottom: 10px; font-weight: bold;">מתחילת העונה</div>
+                <div class="rain-value" style="font-size: 3em; color: var(--accent-deep); display: inline;">...</div>
+                <div style="display: inline; font-size: 1.5em; color: var(--accent-deep); margin-right: 10px;">מ"מ</div>
             </div>
             
             <!-- Today and Weekly -->
@@ -393,7 +321,7 @@
             </div>
 
             <!-- 7 Days Chart -->
-            <div style="text-align: center; color: #666; margin-top: 30px; margin-bottom: 10px; font-weight: bold;">
+            <div style="text-align: center; color: var(--text-2); margin-top: 30px; margin-bottom: 10px; font-weight: bold;">
                 משקעים יומיים - שבוע אחרון (מ"מ)
             </div>
             <div class="chart-container">
@@ -430,9 +358,12 @@
             </div>
         </div>
 
+        </main>
+
         <!-- Footer -->
-        <div class="footer">
-            <p style="font-size: 1.1em; margin-bottom: 20px;">מופעל באמצעות: <strong>נדב אלשיך</strong></p>
+        <footer class="footer">
+            <p style="font-size: 1.1em; margin-bottom: 10px;">מופעל באמצעות: <strong>נדב אלשיך</strong></p>
+            <p class="footer-links"><a href="privacy/">מדיניות פרטיות</a> · <a href="accessibility/">הצהרת נגישות</a></p>
             <nav class="sister" aria-label="האתרים הנוספים שלי">
                 <span class="sister-lbl">עוד אתרים שלי</span>
                 <div class="sister-view">
@@ -460,7 +391,7 @@
                     </div>
                 </div>
             </nav>
-        </div>
+        </footer>
     </div>
 
     <script>
@@ -754,77 +685,15 @@
         // האייקון (זריחה/צאת הכוכבים, ירח, עננות) מתעדכן לבד גם בלי נתוני תחנה חדשים
         setInterval(refreshIcon, 10 * 60 * 1000);
     </script>
+    <script src="assets/sister.js" defer></script>
+    <!-- privacy.js לפני a11y.js, תמיד: a11y.js שואל אותו אם מותר לשמור.
+         הכתובות מפורשות, כי האתר יושב תחת /weather-dashboard/ ב-GitHub Pages
+         והניחוש של הרכיבים לפי עומק הנתיב היה מוסיף ../ מיותר. -->
     <script>
-/* ================= פס האתרים הנוספים =================
-   (מקור: geniza-explorer/assets/sister.js)
-   הפס הוא אזור גלילה רגיל: אפשר להחליק אותו באצבע או לגלול בעכבר.
-   הקוד כאן רק מזיז אותו לאט כשאף אחד לא נוגע בו, ועוצר:
-     - כל עוד אצבע, עכבר או מיקוד מקלדת נמצאים עליו (WCAG 2.2.2);
-     - לעוד כמה שניות אחרי שהמשתמש הפסיק, כדי שהתנועה לא "תחטוף" את
-       הגלילה שלו (כולל תנופת הגלילה שנמשכת אחרי הרמת האצבע);
-     - כשהפס לא נראה במסך.
-   ברשימה שני עותקים (השני מוסתר מקורא המסך ומהמקלדת). כשהגלילה מגיעה
-   לקצה של עותק אחד היא קופצת ברוחב עותק שלם, לאותה נקודה בדיוק במראה,
-   ולכן הלולאה רציפה לשני הכיוונים.
-   במצב "בלי תנועה" (הגדרת המערכת) אין תנועה אוטומטית
-   וההעתק מוסתר ב-CSS; נשאר פס רגיל שגוללים ביד. */
-(function () {
-  var view = document.querySelector('.sister-view');
-  if (!view) return;
-  var sets = view.querySelectorAll('.sister-set');
-  if (sets.length < 2) return;
-
-  var SPEED = 18;          /* פיקסלים לשנייה */
-  var RESUME_MS = 2500;    /* המתנה אחרי מגע לפני שהתנועה חוזרת */
-  var reduce = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
-  var holds = 0, resumeAt = 0, visible = true, pos = null, last = 0;
-
-  function still() {
-    return reduce && reduce.matches;
-  }
-  /* ב-RTL scrollLeft הוא 0 בקצה הימני ושלילי לכיוון שמאל (בכל הדפדפנים
-     המודרניים). התנועה היא ימינה, כלומר חשיפת פריטים משמאל: scrollLeft יורד. */
-  function setW() { return Math.abs(sets[0].offsetLeft - sets[1].offsetLeft); }
-  function wrap(x) {
-    var w = setW(), max = view.scrollWidth - view.clientWidth;
-    if (!w || w >= max) return x;
-    if (x > -1) x -= w;                 /* קרוב לקצה הימני: אותה נקודה בעותק השני */
-    if (x < -(max - 1)) x += w;         /* קרוב לקצה השמאלי: חזרה לעותק הראשון */
-    return x;
-  }
-  function hold() { holds++; }
-  function release() { holds = Math.max(0, holds - 1); resumeAt = performance.now() + RESUME_MS; pos = null; }
-
-  function tick(t) {
-    var dt = last ? Math.min(t - last, 100) : 0;
-    last = t;
-    if (!still() && visible && !holds && t >= resumeAt) {
-      if (pos === null) pos = wrap(view.scrollLeft);
-      pos = wrap(pos - SPEED * dt / 1000);
-      view.scrollLeft = pos;
-    } else if (!holds && t < resumeAt) {
-      /* בזמן ההמתנה: שומרים על הלולאה גם כשהמשתמש גלל עד הקצה ביד */
-      var w = wrap(view.scrollLeft);
-      if (w !== view.scrollLeft) view.scrollLeft = w;
-    }
-    requestAnimationFrame(tick);
-  }
-
-  /* מגע ועכבר: עוצרים בזמן הנגיעה, וממשיכים כמה שניות אחרי */
-  view.addEventListener('touchstart', hold, { passive: true });
-  view.addEventListener('touchend', release, { passive: true });
-  view.addEventListener('touchcancel', release, { passive: true });
-  view.addEventListener('mouseenter', hold);
-  view.addEventListener('mouseleave', release);
-  view.addEventListener('focusin', hold);
-  view.addEventListener('focusout', release);
-  view.addEventListener('wheel', function () { resumeAt = performance.now() + RESUME_MS; pos = null; }, { passive: true });
-
-  if ('IntersectionObserver' in window) {
-    new IntersectionObserver(function (e) { visible = e[0].isIntersecting; }).observe(view);
-  }
-  requestAnimationFrame(tick);
-})();
+      window.PRIVACY_CONFIG = { appPrefixes: ['a11y:'], privacyUrl: 'privacy/' };
+      window.A11Y_CONFIG = { privacyUrl: 'privacy/', accessibilityUrl: 'accessibility/' };
     </script>
+    <script src="assets/privacy.js"></script>
+    <script src="assets/a11y.js"></script>
 </body>
 </html>
