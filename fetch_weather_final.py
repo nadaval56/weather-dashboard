@@ -221,7 +221,7 @@ def build_week_from_ledger(effective_daily):
     return days, rain_today, rain_week
 
 def extract_weather_data():
-    """שליפה ועיבוד נתוני מזג אויר"""
+    """שליפה ועיבוד נתוני מזג אוויר"""
     print("🌤️  שולף נתונים מ-FieldClimate...")
 
     station_info = make_request(f"/station/{STATION_ID}")
