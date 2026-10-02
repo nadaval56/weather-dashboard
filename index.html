@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מזג אויר - כוכב השחר</title>
-    <meta name="description" content="טמפרטורה, רוח ומשקעים עכשיו בכוכב השחר, מתחנת המזג אויר של היישוב. מתעדכן כל שעה, כולל כמות הגשם מתחילת העונה.">
+    <title>מזג אוויר - כוכב השחר</title>
+    <meta name="description" content="טמפרטורה, רוח ומשקעים עכשיו בכוכב השחר, מתחנת מזג האוויר של היישוב. מתעדכן כל שעה, כולל כמות הגשם מתחילת העונה.">
     <link rel="canonical" href="https://nadaval56.github.io/weather-dashboard/">
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="מזג אויר - כוכב השחר">
+    <meta property="og:site_name" content="מזג אוויר - כוכב השחר">
     <meta property="og:locale" content="he_IL">
-    <meta property="og:title" content="מזג אויר - כוכב השחר">
-    <meta property="og:description" content="טמפרטורה, רוח ומשקעים עכשיו בכוכב השחר, מתחנת המזג אויר של היישוב. מתעדכן כל שעה, כולל כמות הגשם מתחילת העונה.">
+    <meta property="og:title" content="מזג אוויר - כוכב השחר">
+    <meta property="og:description" content="טמפרטורה, רוח ומשקעים עכשיו בכוכב השחר, מתחנת מזג האוויר של היישוב. מתעדכן כל שעה, כולל כמות הגשם מתחילת העונה.">
     <meta property="og:url" content="https://nadaval56.github.io/weather-dashboard/">
     <meta property="og:image" content="https://nadaval56.github.io/weather-dashboard/assets/og-image.jpg">
     <meta property="og:image:type" content="image/jpeg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="מזג אויר, כוכב השחר: טמפרטורה, רוח ומשקעים">
+    <meta property="og:image:alt" content="מזג אוויר, כוכב השחר: טמפרטורה, רוח ומשקעים">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="theme-color" content="#2D3748">
     
@@ -266,7 +266,7 @@
     <div class="container">
         <!-- Header -->
         <header class="header">
-            <h1>🌡️ מזג אויר - כוכב השחר</h1>
+            <h1>🌡️ מזג אוויר - כוכב השחר</h1>
             <div class="last-update">טוען...</div>
         </header>
 
@@ -410,7 +410,7 @@
     </div>
 
     <script>
-        // ===== אייקון מזג האויר =====
+        // ===== אייקון מזג האוויר =====
         // יום/לילה: מהזריחה ועד צאת הכוכבים (25 דקות אחרי השקיעה, ברירת המחדל
         //           של לוח עברי), לפי אלגוריתם NOAA מ-hebcal/js/zmanim.js.
         // לילה:     מופע הירח האמיתי (כמו באסטרובוט).
@@ -562,7 +562,7 @@
             renderIcon();
         }
 
-        // טעינת נתוני מזג אויר
+        // טעינת נתוני מזג אוויר
         async function loadWeatherData() {
             try {
                 // Cache busting - מאלץ טעינה מחדש
@@ -583,7 +583,7 @@
                 
                 // עדכון כותרת
                 const h1 = document.querySelector('h1');
-                if (h1) h1.textContent = '🌡️ מזג אויר - ' + data.station_name;
+                if (h1) h1.textContent = '🌡️ מזג אוויר - ' + data.station_name;
                 
                 // עדכון זמן עדכון
                 const updateTime = new Date(data.last_update);
