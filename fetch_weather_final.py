@@ -29,6 +29,9 @@ PRE_STATION_SEASON = "2025-10-01"
 # חודש תחילת עונת הגשמים — גשמי ספטמבר הם כבר תחילת החורף
 SEASON_START_MONTH = 9
 
+# מיקום התחנה — לעננות מ-Open-Meteo
+STATION_LAT, STATION_LON = 31.958, 35.339
+
 # שעון ישראל — אוטומטי, כולל שעון קיץ/חורף
 ISRAEL_TZ = ZoneInfo("Asia/Jerusalem")
 
@@ -220,6 +223,30 @@ def build_week_from_ledger(effective_daily):
     rain_week = round(sum(mm for _, mm in days), 1)
     return days, rain_today, rain_week
 
+def get_cloud_cover():
+    """
+    עננות נוכחית במיקום התחנה, מ-Open-Meteo (חינמי, בלי מפתח, כמו באסטרובוט).
+
+    נמשכת כאן, פעם בשעה יחד עם נתוני התחנה, ולא בדפדפן של כל גולש:
+    כך הגולש לא פונה לשום שירות חיצוני, ויש 24 קריאות ביום בסך הכול.
+    מחזיר {'pct', 'time'} או None — כשל כאן לא מפיל את העדכון.
+    """
+    url = ("https://api.open-meteo.com/v1/forecast"
+           f"?latitude={STATION_LAT}&longitude={STATION_LON}"
+           "&current=cloud_cover&timezone=Asia%2FJerusalem")
+    try:
+        r = requests.get(url, timeout=15)
+        r.raise_for_status()
+        cur = r.json().get('current') or {}
+        pct = cur.get('cloud_cover')
+        if not isinstance(pct, (int, float)):
+            return None
+        print(f"☁️  עננות (Open-Meteo): {pct}% ({cur.get('time')})")
+        return {'pct': round(pct), 'time': cur.get('time')}
+    except Exception as e:
+        print(f"⚠️  עננות לא זמינה: {e}")
+        return None
+
 def extract_weather_data():
     """שליפה ועיבוד נתוני מזג אוויר"""
     print("🌤️  שולף נתונים מ-FieldClimate...")
@@ -340,6 +367,7 @@ def extract_weather_data():
         'last_update': datetime.utcnow().isoformat() + 'Z',
         'station_name': station_info.get('name', {}).get('custom', 'כוכב השחר'),
         'solarPanel': solar_panel,
+        'cloud_cover': get_cloud_cover(),
         'temperature': {
             'current': round(current_temp, 1) if current_temp else None,
             'max': round(temp_max, 1) if temp_max else None,

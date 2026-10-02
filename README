@@ -67,7 +67,7 @@ weather-dashboard/
 ## 🔄 איך זה עובד?
 
 1. **cron-job.org** מפעיל כל שעה (בדקה 7) את ה-workflow ב-GitHub Actions, שמריץ את `fetch_weather_final.py`
-2. הסקריפט מושך נתונים מ-FieldClimate API
+2. הסקריפט מושך נתונים מ-FieldClimate API, ואת העננות במיקום התחנה מ-Open-Meteo (חינמי, בלי מפתח)
 3. הנתונים נשמרים ב-`weather-data.json`
 4. ה-HTML קורא את הקובץ ומציג אותו יפה
 
