@@ -1,0 +1,145 @@
+/* ── הפלטה והמסגרת המשותפת — הדשבורד, מדיניות הפרטיות והצהרת הנגישות ─────
+ *
+ * כל הצבעים באתר עוברים דרך המשתנים שכאן. מצבי התצוגה של תפריט הנגישות
+ * (assets/a11y.css) דורסים את המשתנים האלה, ולכן כל צבע שנכתב ישירות
+ * במקום משתנה הוא צבע שלא יתחלף בניגודיות גבוהה או הפוכה.
+ *
+ * כל המידות של טקסט ב-rem או ב-em, כדי שפקד גודל הטקסט יעבוד.
+ * ────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --bg-1:          #F7FAFC;   /* רקע הדף — מעבר צבע */
+  --bg-2:          #EDF2F7;
+  --surface:       #ffffff;   /* הכרטיס הראשי */
+  --surface-2:     #f8f9ff;   /* כרטיסים פנימיים, כותרת תחתונה */
+  --text:          #333333;   /* 12.6:1 על לבן */
+  --text-2:        #666666;   /*  5.7:1 על לבן, 5.5:1 על --surface-2 */
+  --text-3:        #6b6b6b;   /*  5.3:1 — היה #999 (2.8:1) ו-#718096 (4.0:1) */
+  --header-a:      #4A5568;
+  --header-b:      #2D3748;
+  --header-text:   #ffffff;
+  --accent:        #2196F3;   /* עמודות הגרף והחץ — גרפיקה, לא טקסט */
+  --accent-light:  #64B5F6;
+  --accent-dark:   #1565C0;   /* 5.8:1 — טקסט רגיל בכחול */
+  --accent-deep:   #0d47a1;   /* 7.9:1 על לבן, 6.4:1 על --accent-soft-b — הטקסט בכרטיס העונה */
+  --accent-soft-a: #E3F2FD;
+  --accent-soft-b: #BBDEFB;
+  --hot:           #f44336;   /* חץ המקסימום — סמל, לא טקסט */
+  --link:          #1565C0;
+  --link-hover:    #0d47a1;
+  --border:        #eeeeee;
+  --border-2:      #cbd5e0;
+  --card-border:   rgba(102, 126, 234, 0.1);
+  --chip-text:     #4a5568;
+  --chip-hover:    #90CAF9;
+  --shadow-page:   0 20px 60px rgba(0, 0, 0, 0.3);
+  --shadow-card:   0 4px 15px rgba(0, 0, 0, 0.08);
+  --shadow-hero:   0 8px 25px rgba(33, 150, 243, 0.15);
+  --font-ui:       -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --radius:        6px;
+  --radius-lg:     10px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--font-ui);
+  background: linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 100%);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 20px;
+  direction: rtl;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: var(--surface);
+  border-radius: 20px;
+  box-shadow: var(--shadow-page);
+  overflow: hidden;
+}
+
+.header {
+  background: linear-gradient(135deg, var(--header-a) 0%, var(--header-b) 100%);
+  color: var(--header-text);
+  padding: 30px;
+  text-align: center;
+}
+.header h1 { font-size: 2em; margin-bottom: 10px; }
+.header a { color: inherit; }
+
+/* ── קישור "דלג לתוכן" — מוסתר עד שמגיעים אליו ב-Tab ── */
+.skip-link {
+  position: absolute;
+  inset-inline-start: 12px;
+  top: -100px;
+  z-index: 2147483002;
+  background: var(--accent-dark);
+  color: #fff;
+  padding: .6rem 1rem;
+  border-radius: var(--radius);
+  font-weight: 700;
+  text-decoration: none;
+}
+.skip-link:focus { top: 12px; }
+
+/* ── כותרת תחתונה ── */
+.footer {
+  background: var(--surface-2);
+  padding: 30px;
+  text-align: center;
+  border-top: 1px solid var(--border);
+}
+.footer p { color: var(--text-2); margin-bottom: 15px; }
+.footer-links { font-size: .9rem; }
+.footer-links a { color: var(--link); text-underline-offset: 2px; }
+.footer-links a:hover { color: var(--link-hover); }
+
+/* ── עוד אתרים שלי ──────────────────────────────────────
+   הפס מאתר הגניזה (sister_sites.py + sister.js שם).
+   אזור גלילה רגיל שזז לאט כשלא נוגעים בו; ברשימה שני עותקים
+   כדי שהתנועה תהיה רציפה. במצב "בלי תנועה" ההעתק מוסתר. */
+.sister {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  line-height: 1.6;
+}
+.sister-lbl { flex: none; font-size: .8rem; color: var(--text-3); white-space: nowrap; }
+.sister-view {
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 1.25rem, #000 calc(100% - 1.25rem), transparent 100%);
+          mask-image: linear-gradient(to right, transparent 0, #000 1.25rem, #000 calc(100% - 1.25rem), transparent 100%);
+}
+.sister-view::-webkit-scrollbar { display: none; }
+.sister-track { display: flex; width: max-content; }
+.sister-set { display: flex; gap: 8px; padding-inline-end: 8px; }
+.sister a {
+  flex: none;
+  white-space: nowrap;
+  font-size: .8rem;
+  color: var(--chip-text);
+  text-decoration: none;
+  background: var(--surface);
+  border: 1px solid var(--border-2);
+  border-radius: 999px;
+  padding: 3px 12px;
+  transition: color .2s, border-color .2s;
+}
+.sister a:hover { color: var(--accent-dark); border-color: var(--chip-hover); }
+@media (prefers-reduced-motion: reduce) { .sister-clone { display: none; } }
+html.a11y-still .sister-clone { display: none; }
+@media print { .sister { display: none; } }
+
+@media (max-width: 768px) {
+  body { padding: 10px; }
+  .header h1 { font-size: 1.5em; }
+}

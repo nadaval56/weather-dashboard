@@ -49,6 +49,14 @@ weather-dashboard/
 ├── index.html                    # דף האתר
 ├── fetch_weather_final.py        # סקריפט לשליפת נתונים
 ├── weather-data.json             # נתונים (נוצר אוטומטית)
+├── privacy/index.html            # מדיניות פרטיות
+├── accessibility/index.html      # הצהרת נגישות
+├── assets/
+│   ├── theme.css                 # הפלטה (משתני CSS), המסגרת, הכותרת התחתונה ופס האתרים
+│   ├── a11y.css / a11y.js        # תפריט הנגישות ומצבי התצוגה (מ-geniza-explorer)
+│   ├── privacy.js                # הודעת הפרטיות ופקדי הנתונים (מ-geniza-explorer)
+│   ├── legal.css                 # עיצוב שני המסמכים
+│   └── sister.js                 # התנועה של פס "עוד אתרים שלי"
 └── .github/
     └── workflows/
         └── update-weather.yml    # GitHub Actions
@@ -82,7 +90,15 @@ weather-dashboard/
 
 ### שינוי עיצוב
 
-ערוך את `index.html` - כל ה-CSS נמצא בתוך הקובץ.
+הצבעים מוגדרים כמשתנים ב-`assets/theme.css`, ומצבי הניגודיות של תפריט הנגישות
+דורסים אותם ב-`assets/a11y.css`. צבע חדש צריך להיכנס כמשתנה בשני הקבצים, אחרת
+הוא לא יתחלף בניגודיות גבוהה או הפוכה. העיצוב הייחודי לדשבורד נמצא בתוך `index.html`.
+
+### נגישות ופרטיות
+
+תפריט הנגישות, הודעת הפרטיות ושני המסמכים הועתקו מ-geniza-explorer והותאמו.
+אם משתנה משהו שנוגע לפרטיות (שירות חיצוני חדש, כלי מדידה), צריך לעדכן את
+`privacy/index.html` ואת נוסח ההודעה ב-`assets/privacy.js` **לפני** השינוי.
 
 ## 💰 עלות
 

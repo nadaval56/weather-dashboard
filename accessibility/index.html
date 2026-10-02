@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>הצהרת נגישות — מזג אויר, כוכב השחר</title>
+    <meta name="description" content="הצהרת הנגישות של דשבורד מזג האוויר בכוכב השחר: רמה AA לפי ת"י 5568, תפריט נגישות, מגבלות ידועות ופרטי רכז הנגישות.">
+    <link rel="canonical" href="https://nadaval56.github.io/weather-dashboard/accessibility/">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌤️</text></svg>">
+    <link rel="stylesheet" href="../assets/theme.css">
+    <link rel="stylesheet" href="../assets/legal.css">
+    <link rel="stylesheet" href="../assets/a11y.css">
+    <script>
+      /* העדפות הנגישות מוחלות לפני הציור הראשון, כדי שמי שבחר ניגודיות גבוהה
+         לא יראה את הדף נטען בצבעים הרגילים ואז מתחלף. מי שביקש "בלי שמירה
+         מקומית" לא מקבל קריאה של שום דבר. */
+      try {
+        var _p = localStorage.getItem('privacy:v1');
+        if (!_p || JSON.parse(_p).local !== false) {
+          var _r = document.documentElement, _a = localStorage.getItem('a11y:v1');
+          if (_a) {
+            _a = JSON.parse(_a);
+            if (_a.fs) _r.setAttribute('data-fs', _a.fs);
+            if (_a.mode) _r.classList.add('a11y-' + _a.mode);
+            ['links', 'readable', 'spacing', 'still', 'cursor', 'focus']
+              .forEach(function (k) { if (_a[k]) _r.classList.add('a11y-' + k); });
+          }
+        }
+      } catch (e) { /* מצב פרטי, או אחסון חסום — הדף פשוט נטען כרגיל */ }
+    </script>
+</head>
+<body>
+    <a class="skip-link" href="#legal-main">דלג לתוכן</a>
+    <div class="container">
+        <header class="header header--slim">
+            <a class="site-name" href="../">🌡️ מזג אויר - כוכב השחר</a>
+            <div class="crumb">הצהרת נגישות</div>
+        </header>
+
+        <main class="legal-article" id="legal-main" tabindex="-1">
+            <h1>הצהרת נגישות</h1>
+            <p class="lede">
+                הדשבורד נבנה כך שיהיה שמיש לכל אדם, עם מוגבלות ובלעדיה, בלי להזדקק
+                לתוכנה מיוחדת ובלי לוותר על שום נתון. הדף מפרט מה נעשה בפועל, מה עדיין
+                לא מושלם, ולמי פונים.
+            </p>
+
+            <section class="legal-sec" aria-labelledby="s1">
+                <h2 id="s1">1. רמת הנגישות והתקן</h2>
+                <p>
+                    חובת הנגשת שירותי אינטרנט קבועה בתקנה 35 לתקנות שוויון זכויות
+                    לאנשים עם מוגבלות (התאמות נגישות לשירות), התשע"ג-2013, מכוח חוק שוויון
+                    זכויות לאנשים עם מוגבלות, התשנ"ח-1998. התקנה מפנה לתקן הישראלי
+                    ת"י 5568, המבוסס על הנחיות WCAG 2.0.
+                </p>
+                <p>
+                    האתר הונגש לרמת התאמה AA. צמדי הצבע של טקסט ורקע באתר חושבו
+                    לפי נוסחת WCAG ולא נאמדו בעין, גם במצבי התצוגה של תפריט הנגישות
+                    ולא רק במצב הרגיל.
+                </p>
+            </section>
+
+            <section class="legal-sec" aria-labelledby="s2">
+                <h2 id="s2">2. תפריט הנגישות</h2>
+                <p>
+                    בכל דף באתר, בפינה התחתונה, יש כפתור עגול עם סמל הנגישות. אפשר לפתוח
+                    אותו גם בקיצור <b>Alt+Shift+A</b> מכל מקום בדף, ולסגור ב-<b>Esc</b>.
+                    הבחירות נשמרות במכשיר שלך ומוחלות בכל דף ובכל ביקור.
+                </p>
+                <div class="tbl-scroll" role="region" aria-label="פקדי תפריט הנגישות" tabindex="0">
+                    <table class="legal-tbl">
+                        <caption>הפקדים שבתפריט</caption>
+                        <thead><tr><th scope="col">פקד</th><th scope="col">מה הוא עושה</th></tr></thead>
+                        <tbody>
+                            <tr><td>גודל טקסט: קטן / בינוני / גדול</td><td>מגדיל את כל הטקסט באתר עד 125%. הפריסה מתרחבת יחד איתו ושום דבר לא נחתך.</td></tr>
+                            <tr><td>ניגודיות גבוהה</td><td>שחור על לבן וגבולות מלאים.</td></tr>
+                            <tr><td>ניגודיות הפוכה</td><td>רקע כהה וטקסט בהיר, לרגישות לאור ולקריאה בחושך.</td></tr>
+                            <tr><td>גווני אפור</td><td>מנטרל את הצבע. שימושי בעיוורון צבעים.</td></tr>
+                            <tr><td>פונט קריא</td><td>גופן Arial אחיד וביטול ליגטורות.</td></tr>
+                            <tr><td>ריווח שורות ואותיות</td><td>לפי קריטריון 1.4.12 של WCAG 2.1. מסייע בדיסלקציה.</td></tr>
+                            <tr><td>הדגשת קישורים</td><td>קו תחתון עבה והדגשה במעבר, כדי שקישור לא יזוהה לפי צבע בלבד.</td></tr>
+                            <tr><td>הדגשת מיקוד מקלדת</td><td>מסגרת עבה סביב האלמנט שבמיקוד.</td></tr>
+                            <tr><td>סמן עכבר גדול</td><td>סמן מוגדל בניגודיות גבוהה.</td></tr>
+                            <tr><td>עצירת אנימציות</td><td>מבטל כל תנועה. מסייע ברגישות לתנועה ובהפרעות קשב.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3>למה התפריט נכתב כאן ולא נלקח מתוסף</h3>
+                <ul>
+                    <li><b>פרטיות.</b> תוסף נגישות מסחרי הוא סקריפט שנטען מדומיין אחר
+                        ורץ בדף, בסתירה ל<a href="../privacy/">מדיניות הפרטיות</a> של
+                        האתר, שמצהירה שאין כאן קוד צד-שלישי.</li>
+                    <li><b>זמינות.</b> תוסף שנטען מהרשת אינו קיים כשהחיבור איטי או חסום.</li>
+                    <li><b>זה לא תחליף.</b> תפריט אינו מנגיש אתר; הוא מוסיף התאמות תצוגה
+                        מעל אתר שכבר נגיש. ת"י 5568 דורש נגישות בקוד עצמו, וזה מפורט
+                        בסעיף הבא.</li>
+                </ul>
+            </section>
+
+            <section class="legal-sec" aria-labelledby="s3">
+                <h2 id="s3">3. מה בוצע באתר עצמו</h2>
+                <h3>מבנה וסמנטיקה</h3>
+                <ul>
+                    <li>HTML סמנטי: <code>header</code>, <code>main</code>, <code>nav</code> ו-<code>footer</code>,
+                        כך שקורא מסך יכול לקפוץ בין אזורים.</li>
+                    <li>היררכיית כותרות רציפה: כותרת ראשית אחת לכל דף, ומתחתיה כותרות לכל אזור (רוח, משקעים).</li>
+                    <li>שפה וכיוון מוגדרים (<code>lang="he"</code>, <code>dir="rtl"</code>).</li>
+                    <li>לסמל מזג האוויר הגדול יש תיאור טקסטואלי שמתעדכן איתו, למשל
+                        "מעונן חלקית · עננות 69%" או "רבע אחרון (58% מואר)". החצים שליד
+                        המקסימום והמינימום מוסתרים מקורא המסך, כי התווית שלידם כבר אומרת את זה.</li>
+                    <li>מעל כל עמודה בגרף המשקעים כתוב המספר עצמו ומתחתיה התאריך, כך שהגרף
+                        נקרא גם בלי לראות את גובה העמודות.</li>
+                </ul>
+                <h3>ניווט מקלדת</h3>
+                <ul>
+                    <li>כל האתר ניתן להפעלה במקלדת בלבד.</li>
+                    <li>קישור "דלג לתוכן" בראש כל דף, והוא התחנה הראשונה ב-Tab.</li>
+                    <li>בתפריט הנגישות המיקוד נלכד כל עוד הוא פתוח, וחוזר בסגירה לפקד
+                        שממנו נפתח.</li>
+                </ul>
+                <h3>ראייה וניגודיות</h3>
+                <ul>
+                    <li>כל צבעי הטקסט נבדקו חישובית מול הרקע שלהם. בעקבות הבדיקה תוקנו
+                        חמישה צבעים: האפור של שעות המקסימום והמינימום (היה 2.8:1, נדרש 4.5:1),
+                        התווית "עוד אתרים שלי" (4.0:1), המספרים הקטנים מעל עמודות הגרף (3.1:1),
+                        מספרי הגשם "היום" ו"השבוע" (2.97:1), והכיתוב בכרטיס "מתחילת העונה" (4.1:1).</li>
+                    <li>שום מידע אינו מועבר בצבע בלבד (קריטריון 1.4.1). בתפריט הנגישות מצב
+                        פעיל מסומן גם ב-<code>aria-pressed</code> וגם במיקום הידית, לא רק בגוון.</li>
+                    <li>כל מידות הטקסט יחסיות (rem/em), ולכן פקד גודל הטקסט משפיע על כל האתר.</li>
+                    <li>אין גלישה אופקית ברוחב 320px, גם עם הטקסט המוגדל וגם עם הריווח
+                        המוגדל (קריטריון 1.4.10).</li>
+                </ul>
+                <h3>תנועה וזמן</h3>
+                <ul>
+                    <li>האתר מכבד את הגדרת "צמצום תנועה" של מערכת ההפעלה
+                        (<code>prefers-reduced-motion</code>).</li>
+                    <li>אין תוכן שמהבהב או מתנגן אוטומטית. הדבר היחיד שנע מעצמו לאורך זמן הוא פס
+                        הקישורים "עוד אתרים שלי" בתחתית הדף: הוא זז לאט, נעצר כל עוד
+                        העכבר, האצבע או מיקוד המקלדת נמצאים עליו, ואפשר לגלול אותו ביד.
+                        ב"צמצום תנועה" של המערכת או ב"עצירת אנימציות" בתפריט הנגישות הוא
+                        אינו זז כלל (קריטריון 2.2.2).</li>
+                    <li>הנתונים מתרעננים מעצמם (פעם בחצי שעה, והסמל פעם ב-10 דקות) בלי לטעון
+                        את הדף מחדש ובלי להזיז את המיקוד. אין הגבלת זמן על שום פעולה.</li>
+                </ul>
+            </section>
+
+            <section class="legal-sec" aria-labelledby="s4">
+                <h2 id="s4">4. איך זה נבדק</h2>
+                <ul>
+                    <li><b>ביקורת אוטומטית</b> בדפדפן אמיתי, על הדשבורד ועל שני
+                        המסמכים: כל אחד מעשרת הפקדים, גלישה אופקית ברוחב 320px עם טקסט
+                        וריווח מוגדלים, מבנה סמנטי, וניגודיות מול הרקע בפועל, גם במצבי
+                        "ניגודיות גבוהה" ו"ניגודיות הפוכה".</li>
+                    <li><b>ניווט מקלדת</b>: מעבר על הדף ב-Tab, Shift+Tab, Enter,
+                        Space ו-Esc, בלי עכבר.</li>
+                    <li><b>חישוב ניגודיות</b>: כל צמד צבע-ורקע חושב לפי נוסחת WCAG.</li>
+                </ul>
+                <p class="legal-note">
+                    הבדיקות נעשו על ידי מפעיל האתר. לא נערכה ביקורת נגישות חיצונית על
+                    ידי מורשה נגישות מוסמך, ואיננו מציגים אישור כזה. אנחנו אומרים זאת
+                    במפורש כדי שלא תהיה אי-הבנה לגבי מעמד ההצהרה.
+                </p>
+            </section>
+
+            <section class="legal-sec" aria-labelledby="s5">
+                <h2 id="s5">5. מגבלות ידועות</h2>
+                <p>נגישות היא תהליך ולא תעודה. אלה הדברים שאנחנו יודעים שאינם מושלמים:</p>
+                <ul>
+                    <li><b>הנתונים דורשים JavaScript.</b> הדף טוען את נתוני התחנה בדפדפן,
+                        ובלי JavaScript הוא מציג את המבנה בלי מספרים. שני המסמכים האלה נקראים
+                        במלואם גם בלי JavaScript.</li>
+                    <li><b>גרף המשקעים הוא רכיב חזותי.</b> המספרים והתאריכים כתובים עליו
+                        כטקסט, אבל ההשוואה החזותית בין גובהי העמודות אינה מועברת לקורא מסך.
+                        הסיכומים "היום" ו"השבוע" מופיעים גם כמספרים מעל הגרף.</li>
+                    <li><b>הסמלים הם אימוג'י.</b> המראה שלהם תלוי במערכת ההפעלה, ובמצבי
+                        הניגודיות של התפריט הם נשארים בצבעם. המשמעות שלהם זמינה תמיד גם כטקסט.</li>
+                    <li><b>הנתונים מתעדכנים פעם בשעה.</b> זו מגבלה של התחנה ושל השירות שמספק
+                        את נתוניה. זמן העדכון האחרון מוצג בראש הדף.</li>
+                    <li><b>קישורים לאתרים חיצוניים</b> מובילים לאתרים שאינם בשליטתנו, ואיננו
+                        יכולים להתחייב לרמת הנגישות שלהם.</li>
+                    <li>לא נבדקה תאימות מלאה לכל צירוף של דפדפן, מערכת הפעלה וקורא
+                        מסך. אם נתקלת בצירוף שאינו עובד, זה בדיוק סוג הדיווח שיעזור לנו
+                        לתקן.</li>
+                </ul>
+            </section>
+
+            <section class="legal-sec" aria-labelledby="s6">
+                <h2 id="s6">6. המצב החוקי, כולל מה שאולי פטור</h2>
+                <p>
+                    מן ההגינות לומר את זה בגלוי: ייתכן שהאתר הזה כלל אינו חייב בהנגשה.
+                    התקנות חלות על מי שנותן "שירות ציבורי", וקובעות פטורים והקלות, בין
+                    השאר לפי מחזור עסקאות ולפי היקף השירות ואופיו. האתר הזה הוא פרויקט
+                    אישי, חינמי לחלוטין, בלי פרסומות, בלי מכירה, בלי מחזור כספי ובלי
+                    פעילות עסקית מאחוריו.
+                </p>
+                <p>
+                    למרות זאת בחרנו להנגיש אותו לפי אותן דרישות, ולפרסם את ההצהרה הזו.
+                    מזג האוויר ביישוב שייך לכל מי שגר בו, גם למי שרואה, שומע או מקליד אחרת.
+                </p>
+                <p class="legal-note">ההצהרה הזו אינה מהווה אישור נגישות ואינה חוות דעת של מורשה נגישות.</p>
+            </section>
+
+            <section class="legal-sec" aria-labelledby="s7">
+                <h2 id="s7">7. רכז נגישות ופניות</h2>
+                <p>
+                    אם נתקלת בדף, בפקד או בתוכן שאינך יכול להשתמש בו, כתוב. תיאור קצר של
+                    מה ניסית לעשות, באיזה דף, ובאיזה דפדפן או טכנולוגיה מסייעת, יקצר את
+                    הדרך לתיקון. כל פנייה נבדקת, וגם אם התיקון לוקח זמן, תקבל תשובה.
+                </p>
+                <div class="contact">
+                    <p><b>רכז הנגישות:</b> נדב אלשיך</p>
+                    <p><b>דואר אלקטרוני:</b> <a href="mailto:nadaval56@gmail.com?subject=%D7%A0%D7%92%D7%99%D7%A9%D7%95%D7%AA%20%E2%80%94%20%D7%93%D7%A9%D7%91%D7%95%D7%A8%D7%93%20%D7%9E%D7%96%D7%92%20%D7%94%D7%90%D7%95%D7%95%D7%99%D7%A8%2C%20%D7%9B%D7%95%D7%9B%D7%91%20%D7%94%D7%A9%D7%97%D7%A8">nadaval56@gmail.com</a></p>
+                    <p><b>זמן תגובה:</b> עד 14 ימי עסקים</p>
+                </div>
+                <p>
+                    האתר מופעל ללא מקום פיזי הפתוח לקהל, ולכן אין הסדרי נגישות של מבנה,
+                    של תשתית או של סביבה שיש לפרט כאן. כל השירות ניתן באינטרנט.
+                </p>
+                <p>
+                    אם הפנייה לא נענתה לשביעות רצונך, אפשר לפנות אל
+                    <a href="https://www.gov.il/he/departments/moj_disability_rights">נציבות שוויון זכויות לאנשים עם מוגבלות</a>
+                    שבמשרד המשפטים.
+                </p>
+            </section>
+
+            <nav class="siblings" aria-labelledby="sib">
+                <h2 id="sib">מסמכים נוספים</h2>
+                <ul>
+                    <li><a href="../privacy/">מדיניות פרטיות</a><span>חוק הגנת הפרטיות · תיקון מס' 13</span></li>
+                    <li><a href="../">חזרה לדשבורד</a><span>טמפרטורה, רוח ומשקעים בכוכב השחר</span></li>
+                </ul>
+            </nav>
+            <p class="updated">עודכן לאחרונה: 2 באוקטובר 2026</p>
+        </main>
+
+        <footer class="footer">
+            <p class="footer-links"><a href="../">חזרה לדשבורד</a> · <a href="../privacy/">מדיניות פרטיות</a> · <a href="../accessibility/">הצהרת נגישות</a></p>
+            <nav class="sister" aria-label="האתרים הנוספים שלי">
+                <span class="sister-lbl">עוד אתרים שלי</span>
+                <div class="sister-view">
+                    <div class="sister-track">
+                    <div class="sister-set">
+                        <a href="https://making-il.co.il/" rel="noopener"><span aria-hidden="true">🛠️</span> מייקינג · יצירה טכנולוגית</a>
+                        <a href="https://banknote.co.il/" rel="noopener"><span aria-hidden="true">💶</span> Banknote · שטרות ומטבעות</a>
+                        <a href="https://geniza.co.il/" rel="noopener"><span aria-hidden="true">📜</span> הגניזה הקהירית · מסמכים מגניזת קהיר</a>
+                        <a href="https://dronexam.co.il/" rel="noopener"><span aria-hidden="true">🛩️</span> לעוף לשמיים · מבחן רת"א לרחפנים</a>
+                        <a href="https://holisticcenter.co.il/" rel="noopener"><span aria-hidden="true">🌱</span> מעט צרי · רפואה משלימה</a>
+                        <a href="https://pursue.co.il/" rel="noopener"><span aria-hidden="true">🛸</span> PURSUE · ארכיון עב"מים</a>
+                        <a href="https://quake.co.il/" rel="noopener"><span aria-hidden="true">🌍</span> רעידת אדמה · רעידות היסטוריות</a>
+                        <a href="https://heb-cal.co.il/" rel="noopener"><span aria-hidden="true">📅</span> לוח עברי</a>
+                    </div>
+                    <div class="sister-set sister-clone" aria-hidden="true">
+                        <a href="https://making-il.co.il/" rel="noopener" tabindex="-1"><span aria-hidden="true">🛠️</span> מייקינג · יצירה טכנולוגית</a>
+                        <a href="https://banknote.co.il/" rel="noopener" tabindex="-1"><span aria-hidden="true">💶</span> Banknote · שטרות ומטבעות</a>
+                        <a href="https://geniza.co.il/" rel="noopener" tabindex="-1"><span aria-hidden="true">📜</span> הגניזה הקהירית · מסמכים מגניזת קהיר</a>
+                        <a href="https://dronexam.co.il/" rel="noopener" tabindex="-1"><span aria-hidden="true">🛩️</span> לעוף לשמיים · מבחן רת"א לרחפנים</a>
+                        <a href="https://holisticcenter.co.il/" rel="noopener" tabindex="-1"><span aria-hidden="true">🌱</span> מעט צרי · רפואה משלימה</a>
+                        <a href="https://pursue.co.il/" rel="noopener" tabindex="-1"><span aria-hidden="true">🛸</span> PURSUE · ארכיון עב"מים</a>
+                        <a href="https://quake.co.il/" rel="noopener" tabindex="-1"><span aria-hidden="true">🌍</span> רעידת אדמה · רעידות היסטוריות</a>
+                        <a href="https://heb-cal.co.il/" rel="noopener" tabindex="-1"><span aria-hidden="true">📅</span> לוח עברי</a>
+                    </div>
+                    </div>
+                </div>
+            </nav>
+        </footer>
+    </div>
+
+    <script src="../assets/sister.js" defer></script>
+    <script>
+      window.PRIVACY_CONFIG = { appPrefixes: ['a11y:'], privacyUrl: '../privacy/' };
+      window.A11Y_CONFIG = { privacyUrl: '../privacy/', accessibilityUrl: '../accessibility/' };
+    </script>
+    <script src="../assets/privacy.js"></script>
+    <script src="../assets/a11y.js"></script>
+</body>
+</html>
