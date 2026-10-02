@@ -56,23 +56,29 @@ weather-dashboard/
 
 ## 🔄 איך זה עובד?
 
-1. **GitHub Actions** מריץ את `fetch_weather_final.py` כל 30 דקות
+1. **cron-job.org** מפעיל כל שעה (בדקה 7) את ה-workflow ב-GitHub Actions, שמריץ את `fetch_weather_final.py`
 2. הסקריפט מושך נתונים מ-FieldClimate API
 3. הנתונים נשמרים ב-`weather-data.json`
 4. ה-HTML קורא את הקובץ ומציג אותו יפה
 
 ## 🎨 התאמה אישית
 
-### שינוי תדירות העדכון
+### התזמון: cron-job.org
 
-ערוך את `.github/workflows/update-weather.yml`:
+ה-cron של GitHub דילג על כ-3/4 מהריצות (ספטמבר 2026: 186 ריצות מתוך כ-720),
+ולכן ההפעלה עברה ל-cron-job.org:
 
-```yaml
-schedule:
-  - cron: '*/15 * * * *'  # כל 15 דקות
-  - cron: '0 * * * *'     # כל שעה
-  - cron: '0 */6 * * *'   # כל 6 שעות
-```
+- **המשימה:** `weather-dashboard`, בכל שעה בדקה 7. בקשת POST אל
+  `https://api.github.com/repos/nadaval56/weather-dashboard/actions/workflows/update-weather.yml/dispatches`
+  עם הגוף `{"ref":"main"}` והכותרות `Authorization: Bearer <token>`,
+  `Accept: application/vnd.github+json` ו-`X-GitHub-Api-Version: 2022-11-28`.
+- **המפתח:** fine-grained token בשם `cron-job weather`, עם הרשאת Actions: Read and write
+  לריפו הזה בלבד. **לחדש לפני שהוא פג.** כשהוא יפוג, cron-job.org יקבל 401,
+  ואחרי 25 כשלונות ברצף המשימה מושבתת.
+- **עד מרץ 2028:** GitHub סימן את גרסת ה-API `2022-11-28` כמיושנת (Sunset: 10.3.2028).
+  לפני כן צריך לעדכן את הכותרת `X-GitHub-Api-Version`.
+- **לא להוסיף `schedule` ל-workflow במקביל:** כל ריצה שולחת 2 בקשות ל-FieldClimate,
+  והמכסה היא 48 ביום, כלומר בדיוק 24 ריצות.
 
 ### שינוי עיצוב
 
@@ -81,7 +87,8 @@ schedule:
 ## 💰 עלות
 
 - **GitHub Pages**: חינם
-- **GitHub Actions**: 2,000 דקות חינם/חודש (יותר מספיק!)
+- **GitHub Actions**: חינם (ריפו ציבורי)
+- **cron-job.org**: חינם
 - **FieldClimate API**: ₪240 + מע"מ לשנה
 
 ## ☔ איך נספר הגשם?
