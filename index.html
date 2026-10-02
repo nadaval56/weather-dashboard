@@ -272,8 +272,7 @@
         .sister-view::-webkit-scrollbar { display: none; }
         .sister-track { display: flex; width: max-content; }
         .sister-set { display: flex; gap: 8px; padding-inline-end: 8px; }
-        .sister a,
-        .sister .sister-item {
+        .sister a {
             flex: none;
             white-space: nowrap;
             font-size: .8rem;
@@ -286,12 +285,6 @@
             transition: color .2s, border-color .2s;
         }
         .sister a:hover { color: #1565C0; border-color: #90CAF9; }
-        .sister .sister-item a {
-            border: 0; padding: 0; border-radius: 0; background: none;
-            font-size: inherit; color: inherit;
-            text-decoration: underline; text-underline-offset: 2px;
-        }
-        .sister .sister-item a:hover { color: #1565C0; }
         @media (prefers-reduced-motion: reduce) { .sister-clone { display: none; } }
         @media print { .sister { display: none; } }
 
@@ -445,7 +438,7 @@
                 <div class="sister-view">
                     <div class="sister-track">
                     <div class="sister-set">
-                        <span class="sister-item"><span aria-hidden="true">🛠️</span> <a href="https://making-il.co.il/" rel="noopener">מייקינג</a> · יצירה טכנולוגית</span>
+                        <a href="https://making-il.co.il/" rel="noopener"><span aria-hidden="true">🛠️</span> מייקינג · יצירה טכנולוגית</a>
                         <a href="https://banknote.co.il/" rel="noopener"><span aria-hidden="true">💶</span> Banknote · שטרות ומטבעות</a>
                         <a href="https://geniza.co.il/" rel="noopener"><span aria-hidden="true">📜</span> הגניזה הקהירית · מסמכים מגניזת קהיר</a>
                         <a href="https://dronexam.co.il/" rel="noopener"><span aria-hidden="true">🛩️</span> לעוף לשמיים · מבחן רת"א לרחפנים</a>
@@ -455,7 +448,7 @@
                         <a href="https://heb-cal.co.il/" rel="noopener"><span aria-hidden="true">📅</span> לוח עברי</a>
                     </div>
                     <div class="sister-set sister-clone" aria-hidden="true">
-                        <span class="sister-item"><span aria-hidden="true">🛠️</span> <a href="https://making-il.co.il/" rel="noopener" tabindex="-1">מייקינג</a> · יצירה טכנולוגית</span>
+                        <a href="https://making-il.co.il/" rel="noopener" tabindex="-1"><span aria-hidden="true">🛠️</span> מייקינג · יצירה טכנולוגית</a>
                         <a href="https://banknote.co.il/" rel="noopener" tabindex="-1"><span aria-hidden="true">💶</span> Banknote · שטרות ומטבעות</a>
                         <a href="https://geniza.co.il/" rel="noopener" tabindex="-1"><span aria-hidden="true">📜</span> הגניזה הקהירית · מסמכים מגניזת קהיר</a>
                         <a href="https://dronexam.co.il/" rel="noopener" tabindex="-1"><span aria-hidden="true">🛩️</span> לעוף לשמיים · מבחן רת"א לרחפנים</a>
@@ -471,37 +464,158 @@
     </div>
 
     <script>
-        // פונקציה לקביעת אייקון מזג אויר דינמי
-        function getWeatherIcon(data) {
-            const now = new Date();
-            const hour = now.getHours();
-            
-            const rainLastHour = data.rain.lastHour || 0;  // גשם בשעה האחרונה!
-            const solar = data.solarPanel || 0;
-            
-            console.log(`שעה: ${hour}, פאנל: ${solar} mV, גשם בשעה: ${rainLastHour} מ"מ`);
-            
-            // 1. גשם בשעה האחרונה תמיד גובר
-            if (rainLastHour > 0.3) {
-                return "🌧️";
+        // ===== אייקון מזג האויר =====
+        // יום/לילה: מהזריחה ועד צאת הכוכבים (25 דקות אחרי השקיעה, ברירת המחדל
+        //           של לוח עברי), לפי אלגוריתם NOAA מ-hebcal/js/zmanim.js.
+        // לילה:     מופע הירח האמיתי (כמו באסטרובוט).
+        // עננות:    Open-Meteo, מהרשת ולא מהתחנה (כמו באסטרובוט).
+        // גשם:      נתוני התחנה — גשם בשעה האחרונה גובר על הכול.
+        const STATION_LOC = { lat: 31.958, lng: 35.339 };   // כוכב השחר
+        const TZEIT_MIN = 25;
+        const RAD = Math.PI / 180;
+
+        const Sun = (function () {
+            function julianDay(y, m, d) { return Math.floor(Date.UTC(y, m - 1, d) / 86400000) + 2440587.5; }
+            function jc(jd) { return (jd - 2451545) / 36525; }
+            function meanLong(t) { const l = (280.46646 + t * (36000.76983 + 0.0003032 * t)) % 360; return l < 0 ? l + 360 : l; }
+            function meanAnom(t) { return 357.52911 + t * (35999.05029 - 0.0001537 * t); }
+            function ecc(t) { return 0.016708634 - t * (0.000042037 + 0.0000001267 * t); }
+            function eqCenter(t) {
+                const m = meanAnom(t) * RAD;
+                return Math.sin(m) * (1.914602 - t * (0.004817 + 0.000014 * t)) +
+                    Math.sin(2 * m) * (0.019993 - 0.000101 * t) + Math.sin(3 * m) * 0.000289;
             }
-            
-            // 2. לילה - רק בשעות קיצוניות או כשאין שמש בכלל
-            const isDeepNight = (hour < 5 || hour > 20);
-            const isNight = isDeepNight || (solar < 100 && (hour < 7 || hour > 18));
-            
-            if (isNight) {
-                return "🌙";
+            function appLong(t) { return meanLong(t) + eqCenter(t) - 0.00569 - 0.00478 * Math.sin((125.04 - 1934.136 * t) * RAD); }
+            function obliq(t) {
+                const s = 21.448 - t * (46.815 + t * (0.00059 - t * 0.001813));
+                return 23 + (26 + s / 60) / 60 + 0.00256 * Math.cos((125.04 - 1934.136 * t) * RAD);
             }
-            
-            // 3. יום - לפי פאנל סולארי (מכויל לפי 10821 mV = מעונן חלקית)
-            if (solar > 12000) return "☀️";      // שמש מלאה
-            if (solar > 10500) return "🌤️";     // שמש + עננות קלה
-            if (solar > 8500) return "⛅";       // חלקית מעונן
-            if (solar > 5500) return "🌥️";      // מעונן
-            return "☁️";                         // מעונן מאוד
+            function decl(t) { return Math.asin(Math.sin(obliq(t) * RAD) * Math.sin(appLong(t) * RAD)) / RAD; }
+            function eqTime(t) {
+                const eps = obliq(t) * RAD, l0 = meanLong(t) * RAD, e = ecc(t), m = meanAnom(t) * RAD;
+                let y = Math.tan(eps / 2); y = y * y;
+                return (y * Math.sin(2 * l0) - 2 * e * Math.sin(m) + 4 * e * y * Math.sin(m) * Math.cos(2 * l0) -
+                    0.5 * y * y * Math.sin(4 * l0) - 1.25 * e * e * Math.sin(2 * m)) / RAD * 4;
+            }
+            function hourAngle(lat, dec, zenith) {
+                const c = (Math.cos(zenith * RAD) - Math.sin(lat * RAD) * Math.sin(dec * RAD)) /
+                    (Math.cos(lat * RAD) * Math.cos(dec * RAD));
+                return (c > 1 || c < -1) ? null : Math.acos(c) / RAD;
+            }
+            function timeUTC(jd, lat, lng, zenith, rising) {
+                let mins = 720;
+                for (let i = 0; i < 2; i++) {
+                    const t = jc(jd + mins / 1440), ha = hourAngle(lat, decl(t), zenith);
+                    if (ha === null) return null;
+                    mins = 720 + 4 * (-lng + (rising ? -ha : ha)) - eqTime(t);
+                }
+                return mins;
+            }
+            // זריחה/שקיעה במישור (90.833°), כמו ברוב הלוחות בארץ.
+            // התאריך הוא התאריך בישראל, גם אם הדפדפן בשעון אחר.
+            function event(now, loc, rising) {
+                const [y, m, d] = now.toLocaleDateString('en-CA', { timeZone: 'Asia/Jerusalem' }).split('-').map(Number);
+                const jd = julianDay(y, m, d), mins = timeUTC(jd, loc.lat, loc.lng, 90.833, rising);
+                return mins === null ? null : new Date((jd - 2440587.5) * 86400000 + mins * 60000);
+            }
+            return {
+                sunrise: (now, loc) => event(now, loc, true),
+                sunset: (now, loc) => event(now, loc, false)
+            };
+        })();
+
+        function isDaytime(now) {
+            const sr = Sun.sunrise(now, STATION_LOC), ss = Sun.sunset(now, STATION_LOC);
+            if (!sr || !ss) return now.getHours() >= 6 && now.getHours() < 19;
+            return now >= sr && now < new Date(ss.getTime() + TZEIT_MIN * 60000);
         }
-        
+
+        // מופע הירח: האלונגציה (הזווית בין הירח לשמש) לפי נוסחאות מקוצרות של Meeus —
+        // דיוק של פחות ממעלה, הרבה מעבר למה שצריך לבחירת אימוג'י.
+        function moonPhase(now) {
+            const d = now.getTime() / 86400000 + 2440587.5 - 2451545;
+            const T = d / 36525;
+            const norm = x => ((x % 360) + 360) % 360;
+            const Lm = norm(218.3164477 + 481267.88123421 * T);   // אורך ממוצע של הירח
+            const D = norm(297.8501921 + 445267.1114034 * T);     // אלונגציה ממוצעת
+            const M = norm(357.5291092 + 35999.0502909 * T);      // אנומליה של השמש
+            const Mm = norm(134.9633964 + 477198.8675055 * T);    // אנומליה של הירח
+            const F = norm(93.2720950 + 483202.0175233 * T);
+            const moonLon = Lm + 6.289 * Math.sin(Mm * RAD) + 1.274 * Math.sin((2 * D - Mm) * RAD) +
+                0.658 * Math.sin(2 * D * RAD) + 0.214 * Math.sin(2 * Mm * RAD) -
+                0.186 * Math.sin(M * RAD) - 0.114 * Math.sin(2 * F * RAD);
+            const sunLon = 280.46646 + 36000.76983 * T + 1.914602 * Math.sin(M * RAD) + 0.019993 * Math.sin(2 * M * RAD);
+            const elong = norm(moonLon - sunLon);                    // 0 = מולד, 180 = מלא
+            const illum = Math.round((1 - Math.cos(elong * RAD)) / 2 * 100);
+            // אותם גבולות כמו באסטרובוט (לפי גיל הירח בימים), מתורגמים למעלות
+            const age = elong / 360 * 29.530589;
+            let emoji, name;
+            if      (age <  1.5) [emoji, name] = ['🌑', 'ירח חדש'];
+            else if (age <  7.0) [emoji, name] = ['🌒', 'סהר גדל'];
+            else if (age <  8.5) [emoji, name] = ['🌓', 'רבע ראשון'];
+            else if (age < 14.0) [emoji, name] = ['🌔', 'ירח גדל'];
+            else if (age < 15.5) [emoji, name] = ['🌕', 'ירח מלא'];
+            else if (age < 21.0) [emoji, name] = ['🌖', 'ירח פוחת'];
+            else if (age < 22.5) [emoji, name] = ['🌗', 'רבע אחרון'];
+            else if (age < 28.0) [emoji, name] = ['🌘', 'סהר פוחת'];
+            else                 [emoji, name] = ['🌑', 'ירח חדש'];
+            return { emoji, name, illum };
+        }
+
+        // עננות נוכחית מ-Open-Meteo (חינמי, בלי מפתח). null כשאין נתון.
+        async function fetchCloudCover() {
+            try {
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${STATION_LOC.lat}` +
+                    `&longitude=${STATION_LOC.lng}&current=cloud_cover&timezone=Asia%2FJerusalem`;
+                const res = await fetch(url);
+                if (!res.ok) return null;
+                const json = await res.json();
+                const pct = json.current && json.current.cloud_cover;
+                return typeof pct === 'number' ? pct : null;
+            } catch (e) {
+                console.warn('עננות לא זמינה:', e);
+                return null;
+            }
+        }
+
+        function getWeatherIcon(data, cloud, now = new Date()) {
+            const rainLastHour = (data && data.rain && data.rain.lastHour) || 0;
+            const cloudTxt = cloud === null ? '' : ` · עננות ${cloud}%`;
+
+            // 1. גשם בשעה האחרונה (מהתחנה) תמיד גובר
+            if (rainLastHour > 0.3) return { icon: '🌧️', label: `גשם: ${rainLastHour} מ"מ בשעה האחרונה` };
+
+            // 2. לילה — מופע הירח, אלא אם השמיים מכוסים
+            if (!isDaytime(now)) {
+                const moon = moonPhase(now);
+                if (cloud !== null && cloud >= 75) return { icon: '☁️', label: `לילה מעונן${cloudTxt}` };
+                return { icon: moon.emoji, label: `${moon.name} (${moon.illum}% מואר)${cloudTxt}` };
+            }
+
+            // 3. יום — לפי העננות מהרשת
+            if (cloud === null) return { icon: '☀️', label: 'יום' };
+            if (cloud < 20) return { icon: '☀️', label: `בהיר${cloudTxt}` };
+            if (cloud < 45) return { icon: '🌤️', label: `עננות קלה${cloudTxt}` };
+            if (cloud < 70) return { icon: '⛅', label: `מעונן חלקית${cloudTxt}` };
+            if (cloud < 90) return { icon: '🌥️', label: `מעונן${cloudTxt}` };
+            return { icon: '☁️', label: `מעונן מאוד${cloudTxt}` };
+        }
+
+        let lastData = null, lastCloud = null;
+        function renderIcon() {
+            if (!lastData) return;
+            const { icon, label } = getWeatherIcon(lastData, lastCloud);
+            const el = document.querySelector('.weather-icon');
+            if (el) { el.textContent = icon; el.title = label; el.setAttribute('aria-label', label); }
+            // גם אייקון הלשונית מתחלף
+            const fav = document.querySelector('link[rel="icon"]');
+            if (fav) fav.href = `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">${icon}</text></svg>`;
+        }
+        async function refreshIcon() {
+            lastCloud = await fetchCloudCover();
+            renderIcon();
+        }
+
         // טעינת נתוני מזג אויר
         async function loadWeatherData() {
             try {
@@ -517,11 +631,9 @@
                 console.log('Data loaded:', data);
                 
                 // עדכון אייקון דינמי
-                const weatherIcon = getWeatherIcon(data);
-                const iconElement = document.querySelector('.weather-icon');
-                if (iconElement) {
-                    iconElement.textContent = weatherIcon;
-                }
+                lastData = data;
+                renderIcon();
+                refreshIcon();
                 
                 // עדכון כותרת
                 const h1 = document.querySelector('h1');
@@ -639,6 +751,8 @@
         
         // רענון כל 30 דקות
         setInterval(loadWeatherData, 30 * 60 * 1000);
+        // האייקון (זריחה/צאת הכוכבים, ירח, עננות) מתעדכן לבד גם בלי נתוני תחנה חדשים
+        setInterval(refreshIcon, 10 * 60 * 1000);
     </script>
     <script>
 /* ================= פס האתרים הנוספים =================
