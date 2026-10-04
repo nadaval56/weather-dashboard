@@ -135,6 +135,7 @@ body {
   transition: color .2s, border-color .2s;
 }
 .sister a:hover { color: var(--accent-dark); border-color: var(--chip-hover); }
+.sister a.sister-invite { color: var(--accent-dark); border-color: var(--chip-hover); }
 @media (prefers-reduced-motion: reduce) { .sister-clone { display: none; } }
 html.a11y-still .sister-clone { display: none; }
 @media print { .sister { display: none; } }
