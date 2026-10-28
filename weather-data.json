@@ -1,10 +1,10 @@
 {
-  "last_update": "2026-10-28T20:07:18.775859Z",
+  "last_update": "2026-10-28T21:07:17.384930Z",
   "station_name": "כוכב השחר",
   "solarPanel": 0,
   "cloud_cover": {
     "pct": 0,
-    "time": "2026-10-28T22:00"
+    "time": "2026-10-28T23:00"
   },
   "temperature": {
     "current": 17.8,
