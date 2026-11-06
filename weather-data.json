@@ -1,10 +1,10 @@
 {
-  "last_update": "2026-11-06T06:07:19.143438Z",
+  "last_update": "2026-11-06T07:07:16.145836Z",
   "station_name": "כוכב השחר",
   "solarPanel": 10987,
   "cloud_cover": {
-    "pct": 100,
-    "time": "2026-11-06T08:00"
+    "pct": 73,
+    "time": "2026-11-06T09:00"
   },
   "temperature": {
     "current": 17.9,
